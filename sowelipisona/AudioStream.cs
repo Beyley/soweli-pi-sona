@@ -1,12 +1,12 @@
 namespace sowelipisona;
 
 public abstract class AudioStream {
-	public abstract int    Handle          { get; internal set; }
+	public abstract int Handle { get; internal set; }
 	/// <summary>
-	/// The current position of the stream in miliseconds
+	///     The current position of the stream in miliseconds
 	/// </summary>
 	public abstract double CurrentPosition { get; set; }
-	
+
 	public abstract bool SetAudioDevice(AudioDevice device);
 
 	public abstract bool Start();
