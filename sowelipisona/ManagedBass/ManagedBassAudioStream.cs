@@ -23,6 +23,11 @@ public class ManagedBassAudioStream : AudioStream {
 		internal set;
 	}
 
+	public override double CurrentPosition {
+		get => Bass.ChannelBytes2Seconds(this.Handle, Bass.ChannelGetPosition(this.Handle)) * 1000d;
+		set => Bass.ChannelSetPosition(this.Handle, Bass.ChannelSeconds2Bytes(this.Handle, value));
+	}
+
 	public override bool SetAudioDevice(AudioDevice device) {
 		return Bass.ChannelSetDevice(this.Handle, device.Id);
 	}
@@ -57,7 +62,9 @@ public class ManagedBassAudioStream : AudioStream {
 
 		return false;
 	}
-	public override bool SetVolume(double volume) => Bass.ChannelSetAttribute(this.Handle, ChannelAttribute.Volume, volume);
+	public override bool SetVolume(double volume) {
+		return Bass.ChannelSetAttribute(this.Handle, ChannelAttribute.Volume, volume);
+	}
 
 	internal override bool Dispose() {
 		return Bass.StreamFree(this.Handle);

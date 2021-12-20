@@ -4,13 +4,13 @@ public abstract class AudioEngine {
 	public readonly List<AudioStream> Streams = new();
 
 	/// <summary>
-	/// The current audio device, this should be set to the default by the overriding initialize
+	///     The current audio device, this should be set to the default by the overriding initialize
 	/// </summary>
 	public AudioDevice AudioDeviceInUse { get; protected set; }
-	public bool        Initialized      { get; protected set; }
+	public bool Initialized { get;             protected set; }
 
 	/// <summary>
-	/// Initializes the audio engine to make it ready for audio playback
+	///     Initializes the audio engine to make it ready for audio playback
 	/// </summary>
 	/// <param name="windowId">The ID of the window, not providing one will produce different behavior depending on the backend</param>
 	/// <returns>Whether initializing the audio engine was successful</returns>
@@ -53,7 +53,7 @@ public abstract class AudioEngine {
 	}
 
 	/// <summary>
-	/// Gets a list of all audio devices available
+	///     Gets a list of all audio devices available
 	/// </summary>
 	/// <returns>The registered devices</returns>
 	public abstract AudioDevice[] GetAudioDevices();

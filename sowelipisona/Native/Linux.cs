@@ -1,7 +1,7 @@
 using System.Diagnostics.CodeAnalysis;
 using System.Runtime.InteropServices;
 
-namespace sowelipisona.Native; 
+namespace sowelipisona.Native;
 
 public class Linux {
 	/// <summary>
