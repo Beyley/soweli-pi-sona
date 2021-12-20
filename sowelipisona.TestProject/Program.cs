@@ -8,6 +8,14 @@ engine = new ManagedBassAudioEngine();
 Console.WriteLine("Initializing ManagedBass audio engine!");
 engine.Initialize();
 
+AudioDevice[] audioDevices = engine.GetAudioDevices();
+
+Console.WriteLine("-- Audio Devices --");
+foreach (AudioDevice audioDevice in audioDevices) {
+	Console.WriteLine($"Name: {audioDevice.Name} | Id: {audioDevice.Id} | Type: {audioDevice.Type}");
+}
+Console.WriteLine("-------------------");
+
 Console.WriteLine("Creating Stream");
 AudioStream stream = engine.CreateStream("test.mp3");
 Console.WriteLine($"Stream created (handle:{stream.Handle})!\nPlaying Stream!");
