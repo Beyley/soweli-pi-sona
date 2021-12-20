@@ -1,3 +1,5 @@
+using ManagedBass;
+
 namespace sowelipisona;
 
 public abstract class AudioStream {
@@ -9,12 +11,16 @@ public abstract class AudioStream {
 
 	public abstract bool SetAudioDevice(AudioDevice device);
 
-	public abstract bool Start();
-	public abstract bool Resume();
-	public abstract bool Pause();
-	public abstract bool Stop();
-	public abstract bool SetSpeed(double  speed, bool pitch = false);
-	public abstract bool SetVolume(double volume);
+	public abstract bool   Start();
+	public abstract bool   Resume();
+	public abstract bool   Pause();
+	public abstract bool   Stop();
+	public abstract bool   SetSpeed(double speed, bool pitch = false);
+	public abstract double GetSpeed();
+	public abstract bool   SetVolume(double volume);
+	public abstract double   GetVolume();
 
+	public abstract PlaybackState PlaybackState { get; }
+	
 	internal abstract bool Dispose();
 }

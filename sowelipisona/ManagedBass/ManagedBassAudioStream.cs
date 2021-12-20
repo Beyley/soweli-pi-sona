@@ -44,27 +44,36 @@ public class ManagedBassAudioStream : AudioStream {
 	public override bool Stop() {
 		return Bass.ChannelStop(this.Handle);
 	}
+	private double _lastSpeed = 1d;
 	public override bool SetSpeed(double speed, bool pitch = false) {
 		if (pitch) {
 			bool successFrequency = Bass.ChannelSetAttribute(this.Handle, ChannelAttribute.Frequency, this._initialAudioFrequency * speed);
 			bool successTempo     = Bass.ChannelSetAttribute(this.Handle, ChannelAttribute.Tempo, 0);
 
-			if (successFrequency && successTempo)
-				return true;
+			if (!successFrequency || !successTempo)
+				return false;
+			
+			this._lastSpeed = speed;
+			return true;
 		}
 		else {
 			bool successFrequency = Bass.ChannelSetAttribute(this.Handle, ChannelAttribute.Frequency, this._initialAudioFrequency);
 			bool successTempo     = Bass.ChannelSetAttribute(this.Handle, ChannelAttribute.Tempo, speed * 100 - 100);
 
-			if (successFrequency && successTempo)
-				return true;
+			if (!successFrequency || !successTempo)
+				return false;
+			
+			this._lastSpeed = speed;
+			return true;
 		}
-
-		return false;
 	}
+	public override double GetSpeed() => this._lastSpeed;
 	public override bool SetVolume(double volume) {
 		return Bass.ChannelSetAttribute(this.Handle, ChannelAttribute.Volume, volume);
 	}
+	public override double GetVolume() => Bass.ChannelGetAttribute(this.Handle, ChannelAttribute.Volume);
+
+	public override PlaybackState PlaybackState => Bass.ChannelIsActive(this.Handle);
 
 	internal override bool Dispose() {
 		return Bass.StreamFree(this.Handle);

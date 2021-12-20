@@ -1,5 +1,6 @@
 using FmodAudio;
 using FmodAudio.DigitalSignalProcessing;
+using ManagedBass;
 
 namespace sowelipisona.Fmod;
 
@@ -67,11 +68,15 @@ public class FmodAudioStream : AudioStream {
 
 		return true;
 	}
+	public override double GetSpeed() => this._channel.Frequency / this._initialFrequency;
 	public override bool SetVolume(double volume) {
 		this._channel.Volume = (float)volume;
 
 		return true;
 	}
+	public override double        GetVolume()   => this._channel.Volume;
+	
+	public override PlaybackState PlaybackState => this._channel.IsPlaying ? PlaybackState.Playing : PlaybackState.Paused;
 
 	internal override bool Dispose() {
 		this._sound.Release();
