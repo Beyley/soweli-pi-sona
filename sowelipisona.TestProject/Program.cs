@@ -1,9 +1,11 @@
 ﻿using sowelipisona;
 using sowelipisona.Fmod;
+using sowelipisona.LibVLC;
 using sowelipisona.ManagedBass;
 
 AudioEngine bassEngine;
 AudioEngine fmodEngine;
+AudioEngine libvlcEngine;
 
 bassEngine = new ManagedBassAudioEngine();
 
@@ -18,6 +20,13 @@ Console.WriteLine("Initializing FMod audio engine!");
 fmodEngine.Initialize();
 
 TestEngine(fmodEngine);
+
+libvlcEngine = new LibVLCAudioEngine();
+
+Console.WriteLine("Initializing LibVLC audio engine!");
+libvlcEngine.Initialize();
+
+TestEngine(libvlcEngine);
 
 void TestEngine(AudioEngine engine) {
 	AudioDevice[] audioDevices = engine.GetAudioDevices();
@@ -48,7 +57,7 @@ void TestEngine(AudioEngine engine) {
 	stream.SetSpeed(1);
 	Console.WriteLine($"Press enter to change to low volume | curpos: {stream.CurrentPosition}");
 	Console.ReadLine();
-	stream.SetVolume(0.1);
+	stream.SetVolume(0.5);
 	Console.WriteLine($"Press enter to go to max volume again | curpos: {stream.CurrentPosition}");
 	Console.ReadLine();
 	stream.SetVolume(1);

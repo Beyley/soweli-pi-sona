@@ -8,9 +8,11 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="FmodAudio" Version="2.2.2"/>
-        <PackageReference Include="ManagedBass" Version="3.1.0"/>
-        <PackageReference Include="ManagedBass.Fx" Version="3.1.0"/>
+        <PackageReference Include="FmodAudio" Version="2.2.2" />
+        <PackageReference Include="LibVLCSharp" Version="3.6.4" />
+        <PackageReference Include="ManagedBass" Version="3.1.0" />
+        <PackageReference Include="ManagedBass.Fx" Version="3.1.0" />
+        <PackageReference Include="VideoLAN.LibVLC.Windows" Version="3.0.16" />
     </ItemGroup>
 
 </Project>
