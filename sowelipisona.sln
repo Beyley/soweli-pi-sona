@@ -1,0 +1,22 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "sowelipisona", "sowelipisona\sowelipisona.csproj", "{6AE747AB-F881-45B2-8977-3DC29EFB42D8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "sowelipisona.TestProject", "sowelipisona.TestProject\sowelipisona.TestProject.csproj", "{67E13624-DE64-416F-A3BF-29E789500738}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{6AE747AB-F881-45B2-8977-3DC29EFB42D8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6AE747AB-F881-45B2-8977-3DC29EFB42D8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6AE747AB-F881-45B2-8977-3DC29EFB42D8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6AE747AB-F881-45B2-8977-3DC29EFB42D8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{67E13624-DE64-416F-A3BF-29E789500738}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{67E13624-DE64-416F-A3BF-29E789500738}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{67E13624-DE64-416F-A3BF-29E789500738}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{67E13624-DE64-416F-A3BF-29E789500738}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
