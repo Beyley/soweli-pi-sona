@@ -12,6 +12,8 @@
         <PackageReference Include="LibVLCSharp" Version="3.6.4" />
         <PackageReference Include="ManagedBass" Version="3.1.0" />
         <PackageReference Include="ManagedBass.Fx" Version="3.1.0" />
+        <PackageReference Include="SharpAudio" Version="1.0.53-beta" />
+        <PackageReference Include="SharpAudio.Codec" Version="1.0.53-beta" />
         <PackageReference Include="VideoLAN.LibVLC.Windows" Version="3.0.16" />
     </ItemGroup>
 
