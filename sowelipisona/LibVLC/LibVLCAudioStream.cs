@@ -53,6 +53,9 @@ public class LibVLCAudioStream : AudioStream {
 	}
 	
 	public override bool SetSpeed(double speed, bool pitch = false) {
+		if (pitch)
+			throw new NotImplementedException();
+		
 		this._mediaPlayer.SetRate((float)speed);
 		return true;
 	}
