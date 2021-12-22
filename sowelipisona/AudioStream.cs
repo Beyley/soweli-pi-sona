@@ -8,6 +8,7 @@ public abstract class AudioStream {
 	///     The current position of the stream in miliseconds
 	/// </summary>
 	public abstract double CurrentPosition { get; set; }
+	public abstract double Length { get; }
 
 	public abstract bool SetAudioDevice(AudioDevice device);
 

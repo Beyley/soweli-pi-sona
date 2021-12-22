@@ -74,6 +74,8 @@ public class ManagedBassAudioStream : AudioStream {
 		set => Bass.ChannelSetAttribute(this.Handle, ChannelAttribute.Volume, value);
 	}
 
+	public override double Length => Bass.ChannelBytes2Seconds(this.Handle, Bass.ChannelGetLength(this.Handle)) * 1000d;
+
 	public override PlaybackState PlaybackState => Bass.ChannelIsActive(this.Handle);
 
 	internal override bool Dispose() {

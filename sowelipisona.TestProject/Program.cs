@@ -65,7 +65,7 @@ void TestEngine(AudioEngine engine) {
 		catch (NotImplementedException) {
 			Console.WriteLine("AudioEngine.CreateStream(filename) not implemented!");
 		}
-		Console.WriteLine($"Press enter to pause the stream | curpos: {stream.CurrentPosition}");
+		Console.WriteLine($"Press enter to pause the stream | curpos: {stream.CurrentPosition}/{stream.Length}");
 		Console.ReadLine();
 		try {
 			stream.Pause();
@@ -73,7 +73,7 @@ void TestEngine(AudioEngine engine) {
 		catch (NotImplementedException) {
 			Console.WriteLine("AudioStream.Pause() not implemented!");
 		}
-		Console.WriteLine($"Press enter to play the stream | curpos: {stream.CurrentPosition}");
+		Console.WriteLine($"Press enter to play the stream | curpos: {stream.CurrentPosition}/{stream.Length}");
 		Console.ReadLine();
 		try {
 			stream.Resume();
@@ -81,7 +81,7 @@ void TestEngine(AudioEngine engine) {
 		catch (NotImplementedException) {
 			Console.WriteLine("AudioStream.Resume() not implemented!");
 		}
-		Console.WriteLine($"Press enter to change the speed with pitch | curpos: {stream.CurrentPosition}");
+		Console.WriteLine($"Press enter to change the speed with pitch | curpos: {stream.CurrentPosition}/{stream.Length}");
 		Console.ReadLine();
 		try {
 			stream.SetSpeed(2, true);
@@ -89,7 +89,7 @@ void TestEngine(AudioEngine engine) {
 		catch (NotImplementedException) {
 			Console.WriteLine("AudioStream.SetSpeed(speed=2, pitch=true) not implemented!");
 		}
-		Console.WriteLine($"Press enter to change the speed with no pitch | curpos: {stream.CurrentPosition}");
+		Console.WriteLine($"Press enter to change the speed with no pitch | curpos: {stream.CurrentPosition}/{stream.Length}");
 		Console.ReadLine();
 		try {
 			stream.SetSpeed(2);
@@ -97,7 +97,7 @@ void TestEngine(AudioEngine engine) {
 		catch (NotImplementedException) {
 			Console.WriteLine("AudioStream.SetSpeed(speed=2, pitch=false) not implemented!");
 		}
-		Console.WriteLine($"Press enter to go back to 1x speed | curpos: {stream.CurrentPosition}");
+		Console.WriteLine($"Press enter to go back to 1x speed | curpos: {stream.CurrentPosition}/{stream.Length}");
 		Console.ReadLine();
 		try {
 			stream.SetSpeed(1);
@@ -105,7 +105,7 @@ void TestEngine(AudioEngine engine) {
 		catch (NotImplementedException) {
 			Console.WriteLine("AudioStream.SetSpeed(speed=1) not implemented!");
 		}
-		Console.WriteLine($"Press enter to change to low volume | curpos: {stream.CurrentPosition}");
+		Console.WriteLine($"Press enter to change to low volume | curpos: {stream.CurrentPosition}/{stream.Length}");
 		Console.ReadLine();
 		try {
 			stream.Volume = 0.5;
@@ -113,7 +113,7 @@ void TestEngine(AudioEngine engine) {
 		catch (NotImplementedException) {
 			Console.WriteLine("AudioStream.SetVolume(volume=0.5d) not implemented!");
 		}
-		Console.WriteLine($"Press enter to go to max volume again | curpos: {stream.CurrentPosition}");
+		Console.WriteLine($"Press enter to go to max volume again | curpos: {stream.CurrentPosition}/{stream.Length}");
 		Console.ReadLine();
 		try {
 			stream.Volume = 1;
@@ -121,7 +121,7 @@ void TestEngine(AudioEngine engine) {
 		catch (NotImplementedException) {
 			Console.WriteLine("AudioStream.SetVolume(volume=1d) not implemented!");
 		}
-		Console.WriteLine($"Press enter to run the next test | curpos: {stream.CurrentPosition}");
+		Console.WriteLine($"Press enter to run the next test | curpos: {stream.CurrentPosition}/{stream.Length}");
 		Console.ReadLine();
 		try {
 			stream.Stop();

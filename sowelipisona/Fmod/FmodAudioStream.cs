@@ -33,6 +33,8 @@ public class FmodAudioStream : AudioStream {
 		set => this._channel.SetPosition(TimeUnit.MS, (uint)value);
 	}
 
+	public override double Length => this._sound.GetLength(TimeUnit.MS);
+	
 	public override bool SetAudioDevice(AudioDevice device) {
 		throw new NotImplementedException();
 	}

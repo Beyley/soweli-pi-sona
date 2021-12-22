@@ -19,6 +19,9 @@ public class SharpAudioAudioStream : AudioStream {
 		get => this._stream.Position.TotalMilliseconds;
 		set => this._stream.TrySeek(TimeSpan.FromMilliseconds(value));
 	}
+	
+	public override double Length => this._stream.Duration.TotalMilliseconds;
+	
 	public override bool SetAudioDevice(AudioDevice device) {
 		throw new NotImplementedException();
 	}

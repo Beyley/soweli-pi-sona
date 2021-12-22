@@ -29,6 +29,8 @@ public class LibVLCAudioStream : AudioStream {
 		get => this._mediaPlayer.Position * this._mediaPlayer.Length;
 		set => this._mediaPlayer.Position = (float)(value / this._mediaPlayer.Length);
 	}
+
+	public override double Length => this._mediaPlayer.Length;
 	
 	public override bool SetAudioDevice(AudioDevice device) {
 		this._mediaPlayer.SetOutputDevice(device.Name);
