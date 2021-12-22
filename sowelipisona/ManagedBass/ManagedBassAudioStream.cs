@@ -73,10 +73,17 @@ public class ManagedBassAudioStream : AudioStream {
 		get => Bass.ChannelGetAttribute(this.Handle, ChannelAttribute.Volume);
 		set => Bass.ChannelSetAttribute(this.Handle, ChannelAttribute.Volume, value);
 	}
+	
+	public override bool Loop {
+		get => (Bass.ChannelFlags(this.Handle, 0, 0) & BassFlags.Loop) > 0;
+		set => this.SetFlag(value, BassFlags.Loop);
+	}
 
 	public override double Length => Bass.ChannelBytes2Seconds(this.Handle, Bass.ChannelGetLength(this.Handle)) * 1000d;
 
 	public override PlaybackState PlaybackState => Bass.ChannelIsActive(this.Handle);
+
+	private void SetFlag(bool value, BassFlags flag) => Bass.ChannelFlags(this.Handle, value ? flag : BassFlags.Default, flag);
 
 	internal override bool Dispose() {
 		return Bass.StreamFree(this.Handle);

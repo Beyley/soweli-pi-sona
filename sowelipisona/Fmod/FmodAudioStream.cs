@@ -75,6 +75,21 @@ public class FmodAudioStream : AudioStream {
 		get => this._channel.Volume;
 		set => this._channel.Volume = (float)value;
 	}
+	
+	//TODO: fix this, the flags seem to not be getting set (100% this should be working, ill have to read up more on the Fmod docs)
+	public override bool Loop {
+		get => (this._channel.Mode & Mode.Loop_Normal) != 0;
+		set {
+			if (value) {
+				this._channel.Mode &= ~Mode.Loop_Off;
+				this._channel.Mode |= Mode.Loop_Normal;
+			}
+			else {
+				this._channel.Mode |= Mode.Loop_Off;
+				this._channel.Mode &= ~Mode.Loop_Normal;
+			}
+		}
+	}
 
 	public override PlaybackState PlaybackState => this._channel.IsPlaying ? PlaybackState.Playing : PlaybackState.Paused;
 

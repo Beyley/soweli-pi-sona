@@ -20,6 +20,8 @@ public abstract class AudioStream {
 	public abstract double GetSpeed();
 	public abstract double Volume { get; set; }
 
+	public abstract bool Loop { get; set; }
+
 	public abstract PlaybackState PlaybackState { get; }
 	
 	internal abstract bool Dispose();

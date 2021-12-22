@@ -121,7 +121,23 @@ void TestEngine(AudioEngine engine) {
 		catch (NotImplementedException) {
 			Console.WriteLine("AudioStream.SetVolume(volume=1d) not implemented!");
 		}
-		Console.WriteLine($"Press enter to run the next test | curpos: {stream.CurrentPosition}/{stream.Length}");
+		Console.WriteLine($"Press enter to turn looping on! | curpos: {stream.CurrentPosition}/{stream.Length}");
+		Console.ReadLine();
+		try {
+			stream.Loop = true;
+		}
+		catch (NotImplementedException) {
+			Console.WriteLine("AudioStream.Loop_set(true) not implemented!");
+		}
+		Console.WriteLine($"Press enter to turn looping off! | curpos: {stream.CurrentPosition}/{stream.Length}");
+		Console.ReadLine();
+		try {
+			stream.Loop = false;
+		}
+		catch (NotImplementedException) {
+			Console.WriteLine("AudioStream.Loop_set(false) not implemented!");
+		}
+		Console.WriteLine($"Press enter to stop the stream! | curpos: {stream.CurrentPosition}/{stream.Length}");
 		Console.ReadLine();
 		try {
 			stream.Stop();
@@ -129,6 +145,8 @@ void TestEngine(AudioEngine engine) {
 		catch (NotImplementedException) {
 			Console.WriteLine("AudioStream.Stop() not implemented!");
 		}
+		Console.WriteLine($"Press enter to test the next backend! | curpos: {stream.CurrentPosition}/{stream.Length}");
+		Console.ReadLine();
 		try {
 			engine.DisposeStream(stream);
 		}

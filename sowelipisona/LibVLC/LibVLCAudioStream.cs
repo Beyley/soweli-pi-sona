@@ -68,6 +68,11 @@ public class LibVLCAudioStream : AudioStream {
 		set => this._mediaPlayer.Volume = (int)(value * 100);
 	}
 	
+	public override bool Loop {
+		get => throw new NotImplementedException();
+		set => throw new NotImplementedException();
+	}
+
 	public override PlaybackState PlaybackState => this._mediaPlayer.IsPlaying ? PlaybackState.Playing : PlaybackState.Paused;
 	internal override bool Dispose() {
 		this._mediaPlayer.Stop();

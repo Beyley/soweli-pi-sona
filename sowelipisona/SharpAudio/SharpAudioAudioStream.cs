@@ -52,7 +52,11 @@ public class SharpAudioAudioStream : AudioStream {
 		get => this._stream.Volume;
 		set => this._stream.Volume = (float)value;
 	}
-	
+	public override bool Loop {
+		get => throw new NotImplementedException();
+		set => throw new NotImplementedException();
+	}
+
 	public override PlaybackState PlaybackState {
 		get {
 			return this._stream.State switch {
