@@ -25,7 +25,7 @@ public class ManagedBassAudioStream : AudioStream {
 
 	public override double CurrentPosition {
 		get => Bass.ChannelBytes2Seconds(this.Handle, Bass.ChannelGetPosition(this.Handle)) * 1000d;
-		set => Bass.ChannelSetPosition(this.Handle, Bass.ChannelSeconds2Bytes(this.Handle, value));
+		set => Bass.ChannelSetPosition(this.Handle, Bass.ChannelSeconds2Bytes(this.Handle, value / 1000d));
 	}
 
 	public override bool SetAudioDevice(AudioDevice device) {
