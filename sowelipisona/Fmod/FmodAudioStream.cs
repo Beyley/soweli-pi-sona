@@ -39,7 +39,7 @@ public class FmodAudioStream : AudioStream {
 		throw new NotImplementedException();
 	}
 
-	public override bool Start() {
+	public override bool Play() {
 		this._channel = this._system.PlaySound(this._sound);
 		this._channel.AddDSP(0, this._pitchShift);
 

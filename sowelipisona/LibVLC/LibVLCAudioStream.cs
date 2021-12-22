@@ -37,7 +37,7 @@ public class LibVLCAudioStream : AudioStream {
 		
 		return true;
 	}
-	public override bool Start() {
+	public override bool Play() {
 		this._mediaPlayer.Play();
 		return true;
 	}

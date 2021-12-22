@@ -12,7 +12,7 @@ public abstract class AudioStream {
 
 	public abstract bool SetAudioDevice(AudioDevice device);
 
-	public abstract bool   Start();
+	public abstract bool   Play();
 	public abstract bool   Resume();
 	public abstract bool   Pause();
 	public abstract bool   Stop();

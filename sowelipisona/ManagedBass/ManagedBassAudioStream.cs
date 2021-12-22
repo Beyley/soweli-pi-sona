@@ -32,7 +32,7 @@ public class ManagedBassAudioStream : AudioStream {
 		return Bass.ChannelSetDevice(this.Handle, device.Id);
 	}
 
-	public override bool Start() {
+	public override bool Play() {
 		return Bass.ChannelPlay(this.Handle, true);
 	}
 	public override bool Resume() {

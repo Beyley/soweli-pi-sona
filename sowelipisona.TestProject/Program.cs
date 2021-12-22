@@ -60,7 +60,7 @@ void TestEngine(AudioEngine engine) {
 	if (stream != null) {
 		try {
 			Console.WriteLine($"Stream created (handle:{stream.Handle})!\nPlaying Stream!");
-			stream.Start();
+			stream.Play();
 		}
 		catch (NotImplementedException) {
 			Console.WriteLine("AudioEngine.CreateStream(filename) not implemented!");

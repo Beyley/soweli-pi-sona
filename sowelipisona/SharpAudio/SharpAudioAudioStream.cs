@@ -25,7 +25,7 @@ public class SharpAudioAudioStream : AudioStream {
 	public override bool SetAudioDevice(AudioDevice device) {
 		throw new NotImplementedException();
 	}
-	public override bool Start() {
+	public override bool Play() {
 		this._stream.Play();
 		return true;
 	}
