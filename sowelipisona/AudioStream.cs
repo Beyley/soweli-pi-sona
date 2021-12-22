@@ -17,8 +17,7 @@ public abstract class AudioStream {
 	public abstract bool   Stop();
 	public abstract bool   SetSpeed(double speed, bool pitch = false);
 	public abstract double GetSpeed();
-	public abstract bool   SetVolume(double volume);
-	public abstract double   GetVolume();
+	public abstract double Volume { get; set; }
 
 	public abstract PlaybackState PlaybackState { get; }
 	

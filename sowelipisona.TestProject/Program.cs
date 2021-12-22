@@ -108,7 +108,7 @@ void TestEngine(AudioEngine engine) {
 		Console.WriteLine($"Press enter to change to low volume | curpos: {stream.CurrentPosition}");
 		Console.ReadLine();
 		try {
-			stream.SetVolume(0.5);
+			stream.Volume = 0.5;
 		}
 		catch (NotImplementedException) {
 			Console.WriteLine("AudioStream.SetVolume(volume=0.5d) not implemented!");
@@ -116,7 +116,7 @@ void TestEngine(AudioEngine engine) {
 		Console.WriteLine($"Press enter to go to max volume again | curpos: {stream.CurrentPosition}");
 		Console.ReadLine();
 		try {
-			stream.SetVolume(1);
+			stream.Volume = 1;
 		}
 		catch (NotImplementedException) {
 			Console.WriteLine("AudioStream.SetVolume(volume=1d) not implemented!");

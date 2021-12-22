@@ -68,10 +68,11 @@ public class ManagedBassAudioStream : AudioStream {
 		}
 	}
 	public override double GetSpeed() => this._lastSpeed;
-	public override bool SetVolume(double volume) {
-		return Bass.ChannelSetAttribute(this.Handle, ChannelAttribute.Volume, volume);
+	
+	public override double Volume {
+		get => Bass.ChannelGetAttribute(this.Handle, ChannelAttribute.Volume);
+		set => Bass.ChannelSetAttribute(this.Handle, ChannelAttribute.Volume, value);
 	}
-	public override double GetVolume() => Bass.ChannelGetAttribute(this.Handle, ChannelAttribute.Volume);
 
 	public override PlaybackState PlaybackState => Bass.ChannelIsActive(this.Handle);
 

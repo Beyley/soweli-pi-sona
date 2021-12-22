@@ -69,13 +69,11 @@ public class FmodAudioStream : AudioStream {
 		return true;
 	}
 	public override double GetSpeed() => this._channel.Frequency / this._initialFrequency;
-	public override bool SetVolume(double volume) {
-		this._channel.Volume = (float)volume;
-
-		return true;
+	public override double Volume {
+		get => this._channel.Volume;
+		set => this._channel.Volume = (float)value;
 	}
-	public override double        GetVolume()   => this._channel.Volume;
-	
+
 	public override PlaybackState PlaybackState => this._channel.IsPlaying ? PlaybackState.Playing : PlaybackState.Paused;
 
 	internal override bool Dispose() {

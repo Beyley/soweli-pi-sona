@@ -55,16 +55,16 @@ public class LibVLCAudioStream : AudioStream {
 	public override bool SetSpeed(double speed, bool pitch = false) {
 		if (pitch)
 			throw new NotImplementedException();
-		
+
 		this._mediaPlayer.SetRate((float)speed);
 		return true;
 	}
 	public override double GetSpeed() => this._mediaPlayer.Rate;
-	public override bool SetVolume(double volume) {
-		this._mediaPlayer.Volume = (int)(volume * 100);
-		return true;
+	
+	public override double Volume {
+		get => this._mediaPlayer.Volume / 100d;
+		set => this._mediaPlayer.Volume = (int)(value * 100);
 	}
-	public override double        GetVolume()   => this._mediaPlayer.Volume / 100d;
 	
 	public override PlaybackState PlaybackState => this._mediaPlayer.IsPlaying ? PlaybackState.Playing : PlaybackState.Paused;
 	internal override bool Dispose() {

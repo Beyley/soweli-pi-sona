@@ -44,14 +44,12 @@ public class SharpAudioAudioStream : AudioStream {
 	public override double GetSpeed() {
 		throw new NotImplementedException();
 	}
-	public override bool SetVolume(double volume) {
-		this._stream.Volume = (float)volume;
-
-		return true;
+	
+	public override double Volume {
+		get => this._stream.Volume;
+		set => this._stream.Volume = (float)value;
 	}
-	public override double GetVolume() {
-		return this._stream.Volume;
-	}
+	
 	public override PlaybackState PlaybackState {
 		get {
 			return this._stream.State switch {
