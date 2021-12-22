@@ -35,4 +35,7 @@ public class LibVLCAudioEngine : AudioEngine {
 
 		return stream;
 	}
+	protected override SoundEffectPlayer EngineCreateSoundEffectPlayer(byte[] data) {
+		throw new NotImplementedException();
+	}
 }

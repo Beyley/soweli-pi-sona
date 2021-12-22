@@ -31,4 +31,7 @@ public class FmodAudioEngine : AudioEngine {
 	protected override AudioStream EngineCreateStream(byte[] data) {
 		return new FmodAudioStream(this._system, data);
 	}
+	protected override SoundEffectPlayer EngineCreateSoundEffectPlayer(byte[] data) {
+		throw new NotImplementedException();
+	}
 }

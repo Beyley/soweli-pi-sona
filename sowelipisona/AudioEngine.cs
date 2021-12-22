@@ -1,7 +1,8 @@
 ﻿namespace sowelipisona;
 
 public abstract class AudioEngine {
-	public readonly List<AudioStream> Streams = new();
+	public readonly List<AudioStream>       Streams            = new();
+	public readonly List<SoundEffectPlayer> SoundEffectPlayers = new();
 
 	/// <summary>
 	///     The current audio device, this should be set to the default by the overriding initialize
@@ -23,6 +24,13 @@ public abstract class AudioEngine {
 			this.Streams.Remove(stream);
 		else
 			throw new Exception("Unable to dispose stream! This should *never* happen!");
+	}
+
+	public void DisposeSoundEffectPlayer(SoundEffectPlayer player) {
+		if (player.Dispose())
+			this.SoundEffectPlayers.Remove(player);
+		else
+			throw new Exception("Unable to dispose sound effect player! This should *never* happen!");
 	}
 
 	/// <summary>
@@ -64,4 +72,18 @@ public abstract class AudioEngine {
 	/// <param name="data">The data for the audio file</param>
 	/// <returns></returns>
 	protected abstract AudioStream EngineCreateStream(byte[] data);
+
+	public SoundEffectPlayer CreateSoundEffectPlayer(string filename) {
+		return this.CreateSoundEffectPlayer(File.ReadAllBytes(filename));
+	}
+	
+	public SoundEffectPlayer CreateSoundEffectPlayer(byte[] data) {
+		SoundEffectPlayer player = this.EngineCreateSoundEffectPlayer(data);
+
+		this.SoundEffectPlayers.Add(player);
+
+		return player;
+	}
+	
+	protected abstract SoundEffectPlayer EngineCreateSoundEffectPlayer(byte[] data);
 }

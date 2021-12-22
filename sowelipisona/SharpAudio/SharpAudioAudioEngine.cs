@@ -19,4 +19,7 @@ public class SharpAudioAudioEngine : AudioEngine {
 
 		return new SharpAudioAudioStream(dataStream, this._audioEngine);
 	}
+	protected override SoundEffectPlayer EngineCreateSoundEffectPlayer(byte[] data) {
+		throw new NotImplementedException();
+	}
 }
