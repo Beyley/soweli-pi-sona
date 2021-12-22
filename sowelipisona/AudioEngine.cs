@@ -8,6 +8,9 @@ public abstract class AudioEngine {
 	///     The current audio device, this should be set to the default by the overriding initialize
 	/// </summary>
 	public AudioDevice AudioDeviceInUse { get; protected set; }
+	/// <summary>
+	/// Whether the engine is in an initialized state
+	/// </summary>
 	public bool Initialized { get;             protected set; }
 
 	/// <summary>
@@ -17,8 +20,17 @@ public abstract class AudioEngine {
 	/// <returns>Whether initializing the audio engine was successful</returns>
 	public abstract bool Initialize(IntPtr windowId = default);
 
+	/// <summary>
+	/// The implementation of this is depending on the backend, but it will either set the default for new streams, or the global for all streams
+	/// </summary>
+	/// <param name="device"></param>
+	/// <returns></returns>
 	public abstract bool SetAudioDevice(AudioDevice device);
 
+	/// <summary>
+	/// Disposes an AudioStream, freeing all resources
+	/// </summary>
+	/// <param name="stream">The AudioStream to dispose of</param>
 	public void DisposeStream(AudioStream stream) {
 		if (stream.Dispose())
 			this.Streams.Remove(stream);
@@ -26,6 +38,10 @@ public abstract class AudioEngine {
 			throw new Exception("Unable to dispose stream! This should *never* happen!");
 	}
 
+	/// <summary>
+	/// Disposes a SoundEffectPlayer, freeing all resources
+	/// </summary>
+	/// <param name="player">The SoundEffectPlayer to dispose</param>
 	public void DisposeSoundEffectPlayer(SoundEffectPlayer player) {
 		if (player.Dispose())
 			this.SoundEffectPlayers.Remove(player);

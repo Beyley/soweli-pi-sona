@@ -11,8 +11,8 @@
         <RepositoryType>git</RepositoryType>
         <PackageTags>dotnet audio</PackageTags>
         <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
-        <AssemblyVersion>1.0.4</AssemblyVersion>
-        <Version>1.0.4</Version>
+        <AssemblyVersion>1.0.5</AssemblyVersion>
+        <Version>1.0.5</Version>
         <PackageLicenseUrl>https://github.com/Beyley/soweli-pi-sona/blob/master/LICENSE</PackageLicenseUrl>
     </PropertyGroup>
 

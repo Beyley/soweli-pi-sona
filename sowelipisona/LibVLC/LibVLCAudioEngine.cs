@@ -10,6 +10,8 @@ public class LibVLCAudioEngine : AudioEngine {
 		Core.Initialize();
 		this._libVlc = new();
 
+		this.Initialized = true;
+
 		return true;
 	}
 	

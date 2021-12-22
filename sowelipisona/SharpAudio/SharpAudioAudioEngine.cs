@@ -6,6 +6,7 @@ public class SharpAudioAudioEngine : AudioEngine {
 	public override bool Initialize(IntPtr windowId = default) {
 		this._audioEngine = global::SharpAudio.AudioEngine.CreateDefault();
 
+		this.Initialized = this._audioEngine != null;
 		return this._audioEngine != null;
 	}
 	public override bool SetAudioDevice(AudioDevice device) {

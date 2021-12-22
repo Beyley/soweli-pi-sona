@@ -8,7 +8,9 @@ public class FmodAudioEngine : AudioEngine {
 	public override bool Initialize(IntPtr windowId = default) {
 		this._system = FmodAudio.Fmod.CreateSystem();
 
-		this._system.Init(8);
+		this._system.Init(16);
+
+		this.Initialized = true;
 
 		return true;
 	}
