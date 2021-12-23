@@ -95,7 +95,7 @@ public class FmodAudioStream : AudioStream {
 		}
 	}
 
-	public override PlaybackState PlaybackState => this._channel.IsPlaying ? PlaybackState.Playing : PlaybackState.Paused;
+	public override PlaybackState PlaybackState => this._channel.Paused ? PlaybackState.Paused : PlaybackState.Playing;
 
 	internal override bool Dispose() {
 		this._sound.Release();
