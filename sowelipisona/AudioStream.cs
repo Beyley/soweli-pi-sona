@@ -36,7 +36,7 @@ public abstract class AudioStream {
 	/// <returns>Success</returns>
 	public abstract bool   Pause();
 	/// <summary>
-	/// Stops the stream (usually will either reset stream position to start or free the resources temporarily in preperation for .Play())
+	/// Stops the stream (basically .Pause() but resets the position to 0 in most cases)
 	/// </summary>
 	/// <returns>Success</returns>
 	public abstract bool   Stop();
