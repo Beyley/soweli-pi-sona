@@ -5,8 +5,8 @@ using ManagedBass;
 namespace sowelipisona.Fmod;
 
 public class FmodAudioStream : AudioStream {
-	private readonly Sound   _sound;
-	private          Channel _channel;
+	private readonly Sound    _sound;
+	private          Channel? _channel;
 
 	private float _initialFrequency;
 
@@ -21,6 +21,8 @@ public class FmodAudioStream : AudioStream {
 			Length = (uint)data.Length
 		});
 
+		this._channel = null;
+
 		this._pitchShift = this._system.CreateDSPByType(DSPType.PitchShift);
 	}
 	public override int Handle {
@@ -29,8 +31,16 @@ public class FmodAudioStream : AudioStream {
 	}
 
 	public override double CurrentPosition {
-		get => this._channel.GetPosition(TimeUnit.MS);
-		set => this._channel.SetPosition(TimeUnit.MS, (uint)value);
+		get {
+			if (this._channel != null)
+				return this._channel.GetPosition(TimeUnit.MS);
+
+			return 0d;
+		}
+		set {
+			if (this._channel != null)
+				this._channel.SetPosition(TimeUnit.MS, (uint)value);
+		}
 	}
 
 	public override double Length => this._sound.GetLength(TimeUnit.MS);
@@ -40,7 +50,12 @@ public class FmodAudioStream : AudioStream {
 	}
 
 	public override bool Play() {
+		this._channel?.Stop();
+		
 		this._channel = this._system.PlaySound(this._sound);
+
+		if (this._channel == null) return false;
+		
 		this._channel.AddDSP(0, this._pitchShift);
 
 		this._initialFrequency = this._channel.Frequency;
@@ -48,21 +63,29 @@ public class FmodAudioStream : AudioStream {
 		return true;
 	}
 	public override bool Resume() {
+		if (this._channel == null) return false;
+		
 		this._channel.Paused = false;
 
 		return true;
 	}
 	public override bool Pause() {
+		if (this._channel == null) return false;
+		
 		this._channel.Paused = true;
 
 		return true;
 	}
 	public override bool Stop() {
+		if (this._channel == null) return false;
+		
 		this._channel.Stop();
 
 		return true;
 	}
 	public override bool SetSpeed(double speed, bool pitch = false) {
+		if (this._channel == null) return false;
+		
 		this._channel.Frequency = (float)(this._initialFrequency * speed);
 
 		if (!pitch)
@@ -72,14 +95,20 @@ public class FmodAudioStream : AudioStream {
 	}
 	public override double GetSpeed() => this._channel.Frequency / this._initialFrequency;
 	public override double Volume {
-		get => this._channel.Volume;
-		set => this._channel.Volume = (float)value;
+		get => this._channel != null ? this._channel.Volume : 1f;
+		set {
+			if (this._channel == null) return;
+			
+			this._channel.Volume = (float)value;
+		}
 	}
-	
+
 	//TODO: fix this, the flags seem to not be getting set (100% this should be working, ill have to read up more on the Fmod docs)
 	public override bool Loop {
-		get => (this._channel.Mode & Mode.Loop_Normal) != 0;
+		get => this._channel == null ? throw new Exception("The stream is not initialized!") : (this._channel.Mode & Mode.Loop_Normal) != 0;
 		set {
+			if (this._channel == null) return;
+			
 			if (value) {
 				this._channel.Mode &= ~Mode.Loop_Off;
 				this._channel.Mode |= Mode.Loop_Normal;
@@ -91,7 +120,13 @@ public class FmodAudioStream : AudioStream {
 		}
 	}
 
-	public override PlaybackState PlaybackState => this._channel.IsPlaying ? PlaybackState.Playing : PlaybackState.Paused;
+	public override PlaybackState PlaybackState {
+		get {
+			if (this._channel == null) throw new Exception("Stream not initialized");
+			
+			return this._channel.IsPlaying ? PlaybackState.Playing : PlaybackState.Paused;
+		}
+	}
 
 	internal override bool Dispose() {
 		this._sound.Release();
