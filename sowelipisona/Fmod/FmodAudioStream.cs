@@ -123,8 +123,8 @@ public class FmodAudioStream : AudioStream {
 	public override PlaybackState PlaybackState {
 		get {
 			if (this._channel == null) throw new Exception("Stream not initialized");
-			
-			return this._channel.IsPlaying ? PlaybackState.Playing : PlaybackState.Paused;
+
+			return this._channel.Paused ? PlaybackState.Paused :  PlaybackState.Playing;
 		}
 	}
 
