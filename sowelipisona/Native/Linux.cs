@@ -20,7 +20,7 @@ public class Linux {
 		RTLD_NODELETE     = 0x01000
 	}
 
-	[DllImport("libdl.so", EntryPoint = "dlopen", CharSet = CharSet.Unicode)]
+	[DllImport("libdl.so.2", EntryPoint = "dlopen", CharSet = CharSet.Unicode)]
 	private static extern IntPtr dlopen(string library, LoadFlags flags);
 
 	/// <summary>
