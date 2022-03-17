@@ -1,6 +1,5 @@
 ﻿using sowelipisona;
 using sowelipisona.Fmod;
-using sowelipisona.LibVLC;
 using sowelipisona.ManagedBass;
 using sowelipisona.SharpAudio;
 AudioEngine bassEngine;
@@ -21,13 +20,6 @@ Console.WriteLine("Initializing FMod backend!");
 fmodEngine.Initialize();
 
 TestEngine(fmodEngine);
-
-libvlcEngine = new LibVLCAudioEngine();
-
-Console.WriteLine("Initializing LibVLC backend!");
-libvlcEngine.Initialize();
-
-TestEngine(libvlcEngine);
 
 sharpAudioEngine = new SharpAudioAudioEngine();
 

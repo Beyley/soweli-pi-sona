@@ -11,19 +11,17 @@
         <RepositoryType>git</RepositoryType>
         <PackageTags>dotnet audio</PackageTags>
         <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
-        <AssemblyVersion>1.0.10</AssemblyVersion>
-        <Version>1.0.10</Version>
+        <AssemblyVersion>1.0.11</AssemblyVersion>
+        <Version>1.0.11</Version>
         <PackageLicenseUrl>https://github.com/Beyley/soweli-pi-sona/blob/master/LICENSE</PackageLicenseUrl>
     </PropertyGroup>
 
     <ItemGroup>
         <PackageReference Include="FmodAudio" Version="2.2.2" />
-        <PackageReference Include="LibVLCSharp" Version="3.6.4" />
         <PackageReference Include="ManagedBass" Version="3.1.0" />
         <PackageReference Include="ManagedBass.Fx" Version="3.1.0" />
         <PackageReference Include="SharpAudio" Version="1.0.53-beta" />
         <PackageReference Include="SharpAudio.Codec" Version="1.0.53-beta" />
-        <PackageReference Include="VideoLAN.LibVLC.Windows" Version="3.0.16" />
     </ItemGroup>
 
 </Project>
