@@ -107,4 +107,5 @@ public abstract class AudioEngine {
 
 	public abstract LowPassFilterAudioEffect CreateLowPassFilterEffect(AudioStream stream);
 	public abstract HighPassFilterAudioEffect CreateHighPassFilterEffect(AudioStream stream);
+	public abstract ReverbAudioEffect CreateReverbEffect(AudioStream stream);
 }

@@ -57,4 +57,5 @@ public class ManagedBassAudioEngine : AudioEngine {
 	protected override SoundEffectPlayer EngineCreateSoundEffectPlayer(byte[] data) => new ManagedBassSoundEffectPlayer(data);
 	public override LowPassFilterAudioEffect CreateLowPassFilterEffect(AudioStream stream) => new ManagedBassLowPassFilterAudioEffect(stream);
 	public override HighPassFilterAudioEffect CreateHighPassFilterEffect(AudioStream stream) => new ManagedBassHighPassFilterAudioEffect(stream);
+	public override ReverbAudioEffect CreateReverbEffect(AudioStream stream) => new ManagedBassReverbAudioEffect(stream);
 }

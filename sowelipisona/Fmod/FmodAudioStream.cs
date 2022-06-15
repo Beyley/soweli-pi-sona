@@ -26,7 +26,7 @@ public class FmodAudioStream : AudioStream {
 		
 		this.Channel = this.System.PlaySound(this.Sound, default, true);
 		this.Channel.AddDSP(0, this._pitchShift);
-		this.DspIndex++;
+		// this.DspIndex++;
 
 		this._initialFrequency = this.Channel.Frequency;
 	}

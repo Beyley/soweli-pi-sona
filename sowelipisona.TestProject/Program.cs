@@ -172,6 +172,67 @@ void TestEngine(AudioEngine engine) {
 		catch (NotImplementedException) {
 			Console.WriteLine("Removing high pass effect failed!");
 		}
+
+		#region Reverb
+
+		Console.WriteLine($"Press enter to turn reverb effect on! | curpos: {stream.CurrentPosition}/{stream.Length}");
+		Console.ReadLine();
+		ReverbAudioEffect reverbAudioEffect = null;
+		try {
+			reverbAudioEffect = engine.CreateReverbEffect(stream);
+			reverbAudioEffect.Apply();
+		}
+		catch (NotImplementedException) {
+			Console.WriteLine("Creating reverb effect  failed!");
+		}
+		
+		Console.WriteLine($"Press enter to turn reverb dropoff to -10! | curpos: {stream.CurrentPosition}/{stream.Length}");
+		Console.ReadLine();
+		try {
+			reverbAudioEffect.ReverbDropoff = -10;
+		}
+		catch (NotImplementedException) {
+			Console.WriteLine("Changing reverb intensity to -10 failed!");
+		}
+		
+		Console.WriteLine($"Press enter to turn reverb dropoff to 0! | curpos: {stream.CurrentPosition}/{stream.Length}");
+		Console.ReadLine();
+		try {
+			reverbAudioEffect.ReverbDropoff = 0;
+		}
+		catch (NotImplementedException) {
+			Console.WriteLine("Changing reverb intensity to 0 failed!");
+		}
+		
+		Console.WriteLine($"Press enter to turn reverb time to 300 miliseconds! | curpos: {stream.CurrentPosition}/{stream.Length}");
+		Console.ReadLine();
+		try {
+			reverbAudioEffect.ReverbTime = 300;
+		}
+		catch (NotImplementedException) {
+			Console.WriteLine("Changing reverb time to 300 failed!");
+		}
+		
+		Console.WriteLine($"Press enter to turn reverb time to 0.1 seconds! | curpos: {stream.CurrentPosition}/{stream.Length}");
+		Console.ReadLine();
+		try {
+			reverbAudioEffect.ReverbTime = 100;
+		}
+		catch (NotImplementedException) {
+			Console.WriteLine("Changing reverb time to 100 failed!");
+		}
+		
+		Console.WriteLine($"Press enter to turn reverb effect off! | curpos: {stream.CurrentPosition}/{stream.Length}");
+		Console.ReadLine();
+		try {
+			reverbAudioEffect.Remove();
+		}
+		catch (NotImplementedException) {
+			Console.WriteLine("Removing reverb effect failed!");
+		}
+
+		#endregion
+
 		Console.WriteLine($"Press enter to stop the stream! | curpos: {stream.CurrentPosition}/{stream.Length}");
 		Console.ReadLine();
 		try {
