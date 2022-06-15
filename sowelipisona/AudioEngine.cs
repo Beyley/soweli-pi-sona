@@ -1,4 +1,6 @@
-﻿namespace sowelipisona;
+﻿using sowelipisona.Effects;
+
+namespace sowelipisona;
 
 public abstract class AudioEngine {
 	public readonly List<AudioStream>       Streams            = new();
@@ -102,4 +104,6 @@ public abstract class AudioEngine {
 	}
 	
 	protected abstract SoundEffectPlayer EngineCreateSoundEffectPlayer(byte[] data);
+
+	public abstract LowPassFilterAudioEffect CreateLowPassFilterEffect(AudioStream stream);
 }

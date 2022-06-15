@@ -5,28 +5,30 @@ using ManagedBass;
 namespace sowelipisona.Fmod;
 
 public class FmodAudioStream : AudioStream {
-	private readonly Sound   _sound;
-	private          Channel _channel;
+	internal readonly Sound   Sound;
+	internal readonly Channel Channel;
+	internal readonly FmodSystem System;
 
 	private float _initialFrequency;
 
 	private Dsp _pitchShift;
 
-	private FmodSystem _system;
+	public int DspIndex;
 
 	public FmodAudioStream(FmodSystem system, byte[] data) {
-		this._system = system;
+		this.System = system;
 
-		this._sound = this._system.CreateSound((ReadOnlySpan<byte>)data, Mode.Default | Mode.OpenMemory, new CreateSoundInfo {
+		this.Sound = this.System.CreateSound((ReadOnlySpan<byte>)data, Mode.Default | Mode.OpenMemory, new CreateSoundInfo {
 			Length = (uint)data.Length
 		});
 
-		this._pitchShift = this._system.CreateDSPByType(DSPType.PitchShift);
+		this._pitchShift = this.System.CreateDSPByType(DSPType.PitchShift);
 		
-		this._channel = this._system.PlaySound(this._sound, default, true);
-		this._channel.AddDSP(0, this._pitchShift);
+		this.Channel = this.System.PlaySound(this.Sound, default, true);
+		this.Channel.AddDSP(0, this._pitchShift);
+		this.DspIndex++;
 
-		this._initialFrequency = this._channel.Frequency;
+		this._initialFrequency = this.Channel.Frequency;
 	}
 	public override int Handle {
 		get;
@@ -34,71 +36,71 @@ public class FmodAudioStream : AudioStream {
 	}
 
 	public override double CurrentPosition {
-		get => this._channel.GetPosition(TimeUnit.MS);
-		set => this._channel.SetPosition(TimeUnit.MS, (uint)value);
+		get => this.Channel.GetPosition(TimeUnit.MS);
+		set => this.Channel.SetPosition(TimeUnit.MS, (uint)value);
 	}
 
-	public override double Length => this._sound.GetLength(TimeUnit.MS);
+	public override double Length => this.Sound.GetLength(TimeUnit.MS);
 	
 	public override bool SetAudioDevice(AudioDevice device) {
 		throw new NotImplementedException();
 	}
 
 	public override bool Play() {
-		this._channel.SetPosition(TimeUnit.MS, 0);
-		this._channel.Paused = false;
+		this.Channel.SetPosition(TimeUnit.MS, 0);
+		this.Channel.Paused = false;
 
 		return true;
 	}
 	public override bool Resume() {
-		this._channel.Paused = false;
+		this.Channel.Paused = false;
 
 		return true;
 	}
 	public override bool Pause() {
-		this._channel.Paused = true;
+		this.Channel.Paused = true;
 
 		return true;
 	}
 	public override bool Stop() {
-		this._channel.SetPosition(TimeUnit.MS, 0);
-		this._channel.Paused = true;
+		this.Channel.SetPosition(TimeUnit.MS, 0);
+		this.Channel.Paused = true;
 
 		return true;
 	}
 	public override bool SetSpeed(double speed, bool pitch = false) {
-		this._channel.Frequency = (float)(this._initialFrequency * speed);
+		this.Channel.Frequency = (float)(this._initialFrequency * speed);
 
 		if (!pitch)
 			this._pitchShift.SetParameterFloat(0, (float)(1f / speed));
 
 		return true;
 	}
-	public override double GetSpeed() => this._channel.Frequency / this._initialFrequency;
+	public override double GetSpeed() => this.Channel.Frequency / this._initialFrequency;
 	public override double Volume {
-		get => this._channel.Volume;
-		set => this._channel.Volume = (float)value;
+		get => this.Channel.Volume;
+		set => this.Channel.Volume = (float)value;
 	}
 	
 	//TODO: fix this, the flags seem to not be getting set (100% this should be working, ill have to read up more on the Fmod docs)
 	public override bool Loop {
-		get => (this._channel.Mode & Mode.Loop_Normal) != 0;
+		get => (this.Channel.Mode & Mode.Loop_Normal) != 0;
 		set {
 			if (value) {
-				this._channel.Mode &= ~Mode.Loop_Off;
-				this._channel.Mode |= Mode.Loop_Normal;
+				this.Channel.Mode &= ~Mode.Loop_Off;
+				this.Channel.Mode |= Mode.Loop_Normal;
 			}
 			else {
-				this._channel.Mode |= Mode.Loop_Off;
-				this._channel.Mode &= ~Mode.Loop_Normal;
+				this.Channel.Mode |= Mode.Loop_Off;
+				this.Channel.Mode &= ~Mode.Loop_Normal;
 			}
 		}
 	}
 
-	public override PlaybackState PlaybackState => this._channel.Paused ? PlaybackState.Paused : PlaybackState.Playing;
+	public override PlaybackState PlaybackState => this.Channel.Paused ? PlaybackState.Paused : PlaybackState.Playing;
 
 	internal override bool Dispose() {
-		this._sound.Release();
+		this.Sound.Release();
 
 		return true;
 	}

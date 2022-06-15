@@ -1,4 +1,6 @@
 using FmodAudio;
+using sowelipisona.Effects;
+using sowelipisona.Fmod.Effects;
 
 namespace sowelipisona.Fmod;
 
@@ -34,4 +36,10 @@ public class FmodAudioEngine : AudioEngine {
 		return new FmodAudioStream(this._system, data);
 	}
 	protected override SoundEffectPlayer EngineCreateSoundEffectPlayer(byte[] data) => new FmodSoundEffectPlayer(this._system, data);
+	
+	public override LowPassFilterAudioEffect CreateLowPassFilterEffect(AudioStream stream) {
+		LowPassFilterAudioEffect effect = new FmodLowPassFilterAudioEffect(stream);
+
+		return effect;
+	}
 }

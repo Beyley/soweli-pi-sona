@@ -1,11 +1,9 @@
 ﻿using sowelipisona;
+using sowelipisona.Effects;
 using sowelipisona.Fmod;
 using sowelipisona.ManagedBass;
-using sowelipisona.SharpAudio;
 AudioEngine bassEngine;
 AudioEngine fmodEngine;
-AudioEngine libvlcEngine;
-AudioEngine sharpAudioEngine;
 
 bassEngine = new ManagedBassAudioEngine();
 
@@ -20,13 +18,6 @@ Console.WriteLine("Initializing FMod backend!");
 fmodEngine.Initialize();
 
 TestEngine(fmodEngine);
-
-sharpAudioEngine = new SharpAudioAudioEngine();
-
-Console.WriteLine("Initializing SharpAudio backend!");
-sharpAudioEngine.Initialize();
-
-TestEngine(sharpAudioEngine);
 
 void TestEngine(AudioEngine engine) {
 	try {
@@ -128,6 +119,24 @@ void TestEngine(AudioEngine engine) {
 		}
 		catch (NotImplementedException) {
 			Console.WriteLine("AudioStream.Loop_set(false) not implemented!");
+		}
+		Console.WriteLine($"Press enter to turn low pass effect on! | curpos: {stream.CurrentPosition}/{stream.Length}");
+		Console.ReadLine();
+		LowPassFilterAudioEffect lowPassFilterAudioEffect = null;
+		try {
+			lowPassFilterAudioEffect = engine.CreateLowPassFilterEffect(stream);
+			lowPassFilterAudioEffect.Apply();
+		}
+		catch (NotImplementedException) {
+			Console.WriteLine("Creating low pass effect failed!");
+		}
+		Console.WriteLine($"Press enter to turn low pass effect off! | curpos: {stream.CurrentPosition}/{stream.Length}");
+		Console.ReadLine();
+		try {
+			lowPassFilterAudioEffect.Remove();
+		}
+		catch (NotImplementedException) {
+			Console.WriteLine("Removing low pass effect failed!");
 		}
 		Console.WriteLine($"Press enter to stop the stream! | curpos: {stream.CurrentPosition}/{stream.Length}");
 		Console.ReadLine();

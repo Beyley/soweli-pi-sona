@@ -1,5 +1,7 @@
 using System.Runtime.InteropServices;
 using ManagedBass;
+using sowelipisona.Effects;
+using sowelipisona.ManagedBass.Effects;
 using sowelipisona.Native;
 
 namespace sowelipisona.ManagedBass;
@@ -53,4 +55,10 @@ public class ManagedBassAudioEngine : AudioEngine {
 	}
 	protected override AudioStream EngineCreateStream(byte[] data) => new ManagedBassAudioStream(data);
 	protected override SoundEffectPlayer EngineCreateSoundEffectPlayer(byte[] data) => new ManagedBassSoundEffectPlayer(data);
+	public override LowPassFilterAudioEffect CreateLowPassFilterEffect(AudioStream stream)
+	{
+		LowPassFilterAudioEffect effect = new ManagedBassLowPassFilterAudioEffect(stream);
+
+		return effect;
+	}
 }
