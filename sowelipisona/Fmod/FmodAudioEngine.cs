@@ -37,9 +37,6 @@ public class FmodAudioEngine : AudioEngine {
 	}
 	protected override SoundEffectPlayer EngineCreateSoundEffectPlayer(byte[] data) => new FmodSoundEffectPlayer(this._system, data);
 	
-	public override LowPassFilterAudioEffect CreateLowPassFilterEffect(AudioStream stream) {
-		LowPassFilterAudioEffect effect = new FmodLowPassFilterAudioEffect(stream);
-
-		return effect;
-	}
+	public override LowPassFilterAudioEffect CreateLowPassFilterEffect(AudioStream stream) => new FmodLowPassFilterAudioEffect(stream);
+	public override HighPassFilterAudioEffect CreateHighPassFilterEffect(AudioStream stream) => new FmodHighPassFilterAudioEffect(stream);
 }

@@ -130,6 +130,14 @@ void TestEngine(AudioEngine engine) {
 		catch (NotImplementedException) {
 			Console.WriteLine("Creating low pass effect failed!");
 		}
+		Console.WriteLine($"Press enter to turn low pass to a cutoff of 1000hz! | curpos: {stream.CurrentPosition}/{stream.Length}");
+		Console.ReadLine();
+		try {
+			lowPassFilterAudioEffect.FrequencyCutoff = 1000;
+		}
+		catch (NotImplementedException) {
+			Console.WriteLine("Changing low pass frequency to 1000hz failed!");
+		}
 		Console.WriteLine($"Press enter to turn low pass effect off! | curpos: {stream.CurrentPosition}/{stream.Length}");
 		Console.ReadLine();
 		try {
@@ -137,6 +145,32 @@ void TestEngine(AudioEngine engine) {
 		}
 		catch (NotImplementedException) {
 			Console.WriteLine("Removing low pass effect failed!");
+		}
+		Console.WriteLine($"Press enter to turn high pass effect on! | curpos: {stream.CurrentPosition}/{stream.Length}");
+		Console.ReadLine();
+		HighPassFilterAudioEffect highPassFilterAudioEffect = null;
+		try {
+			highPassFilterAudioEffect = engine.CreateHighPassFilterEffect(stream);
+			highPassFilterAudioEffect.Apply();
+		}
+		catch (NotImplementedException) {
+			Console.WriteLine("Creating high pass effect failed!");
+		}
+		Console.WriteLine($"Press enter to turn high pass to a cutoff of 400hz! | curpos: {stream.CurrentPosition}/{stream.Length}");
+		Console.ReadLine();
+		try {
+			highPassFilterAudioEffect.FrequencyCutoff = 400;
+		}
+		catch (NotImplementedException) {
+			Console.WriteLine("Changing high pass frequency to 1000hz failed!");
+		}
+		Console.WriteLine($"Press enter to turn high pass effect off! | curpos: {stream.CurrentPosition}/{stream.Length}");
+		Console.ReadLine();
+		try {
+			highPassFilterAudioEffect.Remove();
+		}
+		catch (NotImplementedException) {
+			Console.WriteLine("Removing high pass effect failed!");
 		}
 		Console.WriteLine($"Press enter to stop the stream! | curpos: {stream.CurrentPosition}/{stream.Length}");
 		Console.ReadLine();

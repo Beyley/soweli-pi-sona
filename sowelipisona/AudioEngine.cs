@@ -106,4 +106,5 @@ public abstract class AudioEngine {
 	protected abstract SoundEffectPlayer EngineCreateSoundEffectPlayer(byte[] data);
 
 	public abstract LowPassFilterAudioEffect CreateLowPassFilterEffect(AudioStream stream);
+	public abstract HighPassFilterAudioEffect CreateHighPassFilterEffect(AudioStream stream);
 }
