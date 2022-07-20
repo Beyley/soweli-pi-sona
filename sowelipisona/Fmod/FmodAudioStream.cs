@@ -1,34 +1,45 @@
-using FmodAudio;
-using FmodAudio.DigitalSignalProcessing;
+using System.Runtime.InteropServices;
+using ChaiFoxes.FMODAudio;
+using FMOD;
 using ManagedBass;
+using Channel = FMOD.Channel;
+using Sound = FMOD.Sound;
 
 namespace sowelipisona.Fmod;
 
 public class FmodAudioStream : AudioStream {
-	internal readonly Sound   Sound;
-	internal readonly Channel Channel;
-	internal readonly FmodSystem System;
+	internal Sound   Sound;
+	internal Channel Channel;
 
 	private float _initialFrequency;
 
-	private Dsp _pitchShift;
+	private DSP _pitchShift;
 
 	public int DspIndex;
 
-	public FmodAudioStream(FmodSystem system, byte[] data) {
-		this.System = system;
-
-		this.Sound = this.System.CreateSound((ReadOnlySpan<byte>)data, Mode.Default | Mode.OpenMemory, new CreateSoundInfo {
-			Length = (uint)data.Length
-		});
-
-		this._pitchShift = this.System.CreateDSPByType(DSPType.PitchShift);
+	public FmodAudioStream(byte[] data) {
+		CREATESOUNDEXINFO info = new CREATESOUNDEXINFO();
+		info.length   = (uint)data.Length;
+		info.cbsize = Marshal.SizeOf(info);
+		RESULT result = CoreSystem.Native.createSound(data, MODE.OPENMEMORY | MODE.DEFAULT, ref info, out this.Sound);
+		if (result != RESULT.OK)
+			throw new Exception($"Failed to create sound! err:{result}");
 		
-		this.Channel = this.System.PlaySound(this.Sound, default, true);
-		this.Channel.AddDSP(0, this._pitchShift);
-		// this.DspIndex++;
+		result = CoreSystem.Native.createDSPByType(DSP_TYPE.PITCHSHIFT, out this._pitchShift);
+		if (result != RESULT.OK)
+			throw new Exception($"Failed to create pitch DSP! err:{result}");
 
-		this._initialFrequency = this.Channel.Frequency;
+		result       = CoreSystem.Native.playSound(this.Sound, default, true, out this.Channel);
+		if (result != RESULT.OK)
+			throw new Exception($"Failed to create `sound`! err:{result}");
+
+		result = this.Channel.addDSP(0, this._pitchShift);
+		if (result != RESULT.OK)
+			throw new Exception($"Failed to add dsp! err:{result}");
+		
+		result = this.Channel.getFrequency(out this._initialFrequency);
+		if (result != RESULT.OK)
+			throw new Exception($"Failed to get frequency! err:{result}");
 	}
 	public override int Handle {
 		get;
@@ -36,71 +47,108 @@ public class FmodAudioStream : AudioStream {
 	}
 
 	public override double CurrentPosition {
-		get => this.Channel.GetPosition(TimeUnit.MS);
-		set => this.Channel.SetPosition(TimeUnit.MS, (uint)value);
+		get {
+			RESULT result = this.Channel.getPosition(out uint position, TIMEUNIT.MS);
+			if (result != RESULT.OK)
+				throw new Exception($"Failed to get current position! err:{result}");
+			
+			return position;
+		}
+		set {
+			RESULT result = this.Channel.setPosition((uint)value, TIMEUNIT.MS);
+			if (result != RESULT.OK)
+				throw new Exception($"Failed to set current position! err:{result}");
+		}
 	}
 
-	public override double Length => this.Sound.GetLength(TimeUnit.MS);
+	public override double Length {
+		get {
+			RESULT result = this.Sound.getLength(out uint length, TIMEUNIT.MS);
+			if (result != RESULT.OK)
+				throw new Exception($"Failed to get length! err:{result}");
+			
+			return length;
+		}
+	}
 	
 	public override bool SetAudioDevice(AudioDevice device) {
 		throw new NotImplementedException();
 	}
 
 	public override bool Play() {
-		this.Channel.SetPosition(TimeUnit.MS, 0);
-		this.Channel.Paused = false;
+		this.Channel.setPosition(0, TIMEUNIT.MS);
+		this.Channel.setPaused(false);
 
 		return true;
 	}
 	public override bool Resume() {
-		this.Channel.Paused = false;
+		this.Channel.setPaused(false);
 
 		return true;
 	}
 	public override bool Pause() {
-		this.Channel.Paused = true;
+		this.Channel.setPaused(true);
 
 		return true;
 	}
 	public override bool Stop() {
-		this.Channel.SetPosition(TimeUnit.MS, 0);
-		this.Channel.Paused = true;
+		this.Channel.setPosition(0, TIMEUNIT.MS);
+		this.Channel.setPaused(true);
 
 		return true;
 	}
 	public override bool SetSpeed(double speed, bool pitch = false) {
-		this.Channel.Frequency = (float)(this._initialFrequency * speed);
+		this.Channel.setFrequency((float)(this._initialFrequency * speed));
 
 		if (!pitch)
-			this._pitchShift.SetParameterFloat(0, (float)(1f / speed));
+			this._pitchShift.setParameterFloat(0, (float)(1f / speed));
 
 		return true;
 	}
-	public override double GetSpeed() => this.Channel.Frequency / this._initialFrequency;
-	public override double Volume {
-		get => this.Channel.Volume;
-		set => this.Channel.Volume = (float)value;
+	public override double GetSpeed() {
+		this.Channel.getFrequency(out float frequency);
+		
+		return frequency / this._initialFrequency;
 	}
-	
-	//TODO: fix this, the flags seem to not be getting set (100% this should be working, ill have to read up more on the Fmod docs)
-	public override bool Loop {
-		get => (this.Channel.Mode & Mode.Loop_Normal) != 0;
+	public override double Volume {
+		get {
+			this.Channel.getVolume(out float volume);
+			return volume;
+		}
 		set {
-			if (value) {
-				this.Channel.Mode &= ~Mode.Loop_Off;
-				this.Channel.Mode |= Mode.Loop_Normal;
-			}
-			else {
-				this.Channel.Mode |= Mode.Loop_Off;
-				this.Channel.Mode &= ~Mode.Loop_Normal;
-			}
+			this.Channel.setVolume((float)value);
 		}
 	}
 
-	public override PlaybackState PlaybackState => this.Channel.Paused ? PlaybackState.Paused : PlaybackState.Playing;
+	//TODO: fix this, the flags seem to not be getting set (100% this should be working, ill have to read up more on the Fmod docs)
+	public override bool Loop {
+		get {
+			this.Channel.getMode(out MODE mode);
+			return (mode & MODE.LOOP_NORMAL) != 0;
+		}
+		set {
+			this.Channel.getMode(out MODE mode);
+			if (value) {
+				mode &= ~MODE.LOOP_OFF;
+				mode |= MODE.LOOP_NORMAL;
+			}
+			else {
+				mode |= MODE.LOOP_OFF;
+				mode &= ~MODE.LOOP_NORMAL;
+			}
+			this.Channel.setMode(mode);
+		}
+	}
+
+	public override PlaybackState PlaybackState {
+		get {
+			this.Channel.getPaused(out bool paused);
+			return paused ? PlaybackState.Paused : PlaybackState.Playing;
+		}
+	}
 
 	internal override bool Dispose() {
-		this.Sound.Release();
+		this.Sound.release();
 
 		return true;
 	}

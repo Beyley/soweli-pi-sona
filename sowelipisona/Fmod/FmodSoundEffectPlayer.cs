@@ -1,29 +1,32 @@
-using FmodAudio;
+using System.Runtime.InteropServices;
+using ChaiFoxes.FMODAudio;
+using FMOD;
+using Channel = FMOD.Channel;
+using Sound = FMOD.Sound;
 
 namespace sowelipisona.Fmod; 
 
 public class FmodSoundEffectPlayer : SoundEffectPlayer {
-	private FmodSystem _system;
+	private Sound _sound;
 
-	private readonly Sound _sound;
-
-	internal FmodSoundEffectPlayer(FmodSystem system, byte[] data) {
-		this._system = system;
-
-		this._sound = this._system.CreateSound((ReadOnlySpan<byte>)data, Mode.Default | Mode.OpenMemory, new CreateSoundInfo {
-			Length = (uint)data.Length
-		});
+	internal FmodSoundEffectPlayer(byte[] data) {
+		CREATESOUNDEXINFO exinfo = new CREATESOUNDEXINFO {
+			length = (uint)data.Length
+		};
+		exinfo.cbsize = Marshal.SizeOf(exinfo);
+		
+		CoreSystem.Native.createSound(data, MODE.CREATESAMPLE | MODE.OPENMEMORY, ref exinfo, out this._sound);
 	}
 
 	public override bool PlayNew() {
-		Channel channel = this._system.PlaySound(this._sound);
-
-		channel.Volume = (float)this.Volume;
+		CoreSystem.Native.playSound(this._sound, default, false, out Channel channel);
+		
+		channel.setVolume((float)this.Volume);
 
 		return true;
 	}
 	internal override bool Dispose() {
-		this._sound.Dispose();
+		this._sound.release();
 		return true;
 	}
 }

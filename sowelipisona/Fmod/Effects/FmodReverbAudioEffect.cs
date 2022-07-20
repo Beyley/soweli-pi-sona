@@ -1,12 +1,11 @@
-using FmodAudio.Base;
-using FmodAudio.DigitalSignalProcessing;
-using FmodAudio.DigitalSignalProcessing.Effects;
+using ChaiFoxes.FMODAudio;
+using FMOD;
 using sowelipisona.Effects;
 
 namespace sowelipisona.Fmod.Effects; 
 
 public class FmodReverbAudioEffect : ReverbAudioEffect {
-	private Dsp _dsp;
+	private DSP _dsp;
 	private int _dspIndex;
 	public FmodReverbAudioEffect(AudioStream stream) : base(stream) {}
 
@@ -21,7 +20,7 @@ public class FmodReverbAudioEffect : ReverbAudioEffect {
 			this.CheckDropoff(value);
 
 			this._reverbDropoff = value;
-			this._dsp.SetParameterFloat((int)DspSfxReverb.WetLevel, (float)this.ReverbDropoff);
+			this._dsp.setParameterFloat((int)DSP_SFXREVERB.WETLEVEL, (float)this.ReverbDropoff);
 		}
 	}
 	public override double ReverbTime {
@@ -33,7 +32,7 @@ public class FmodReverbAudioEffect : ReverbAudioEffect {
 			this.CheckTime(value);
 
 			this._reverbTime = value;
-			this._dsp.SetParameterFloat((int)DspSfxReverb.EarlyDelay, (float)this.ReverbTime);
+			this._dsp.setParameterFloat((int)DSP_SFXREVERB.EARLYDELAY, (float)this.ReverbTime);
 		}
 	}
 	
@@ -43,16 +42,13 @@ public class FmodReverbAudioEffect : ReverbAudioEffect {
 
 		FmodAudioStream stream = this.AsFmodAudioStream();
 
-		this._dsp = stream.System.CreateDSPByType(DSPType.SFXReverb);
+		CoreSystem.Native.createDSPByType(DSP_TYPE.SFXREVERB, out this._dsp);
 		
-		this._dsp.SetParameterFloat((int)DspSfxReverb.EarlyDelay, (float)this.ReverbTime);
-		this._dsp.SetParameterFloat((int)DspSfxReverb.WetLevel, (float)this.ReverbDropoff);
-		// this._dsp.SetParameterFloat((int)DspSfxReverb.LateDelay, 0);
-		// this._dsp.SetParameterFloat((int)DspMultibandEq.A_Frequency, (float)this.FrequencyCutoff);
-		// this._dsp.SetParameterFloat((int)DspMultibandEq.A_Q, 1f);
+		this._dsp.setParameterFloat((int)DSP_SFXREVERB.EARLYDELAY, (float)this.ReverbTime);
+		this._dsp.setParameterFloat((int)DSP_SFXREVERB.WETLEVEL, (float)this.ReverbDropoff);
 
 		this._dspIndex = stream.DspIndex++;
-		stream.Channel.AddDSP(this._dspIndex, this._dsp);
+		stream.Channel.addDSP(this._dspIndex, this._dsp);
 	}
 	protected override void InternalRemove() {
 		if (!this.Applied)
@@ -60,6 +56,6 @@ public class FmodReverbAudioEffect : ReverbAudioEffect {
 		
 		FmodAudioStream stream = this.AsFmodAudioStream();
 		
-		stream.Channel.RemoveDSP(this._dsp);
+		stream.Channel.removeDSP(this._dsp);
 	}
 }

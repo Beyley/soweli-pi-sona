@@ -1,12 +1,11 @@
-using FmodAudio.Base;
-using FmodAudio.DigitalSignalProcessing;
-using FmodAudio.DigitalSignalProcessing.Effects;
+using ChaiFoxes.FMODAudio;
+using FMOD;
 using sowelipisona.Effects;
 
 namespace sowelipisona.Fmod.Effects; 
 
 public class FmodHighPassFilterAudioEffect : HighPassFilterAudioEffect {
-	private Dsp _dsp;
+	private DSP _dsp;
 	private int _dspIndex;
 	public FmodHighPassFilterAudioEffect(AudioStream stream) : base(stream) {}
 	
@@ -18,7 +17,7 @@ public class FmodHighPassFilterAudioEffect : HighPassFilterAudioEffect {
 			
 			this._frequencyCutoff = value;
 			
-			this._dsp.SetParameterFloat((int)DspMultibandEq.A_Frequency, (float)this.FrequencyCutoff);
+			this._dsp.setParameterFloat((int)DSP_MULTIBAND_EQ.A_FREQUENCY, (float)this.FrequencyCutoff);
 		}
 	}
 
@@ -30,14 +29,14 @@ public class FmodHighPassFilterAudioEffect : HighPassFilterAudioEffect {
 
 		FmodAudioStream stream = this.AsFmodAudioStream();
 
-		this._dsp = stream.System.CreateDSPByType(DSPType.MultiBand_EQ);
+		CoreSystem.Native.createDSPByType(DSP_TYPE.MULTIBAND_EQ, out this._dsp);
 		
-		this._dsp.SetParameterInt((int)DspMultibandEq.A_Filter, (int)DspMultibandEqFilterType.Highpass_24DB);
-		this._dsp.SetParameterFloat((int)DspMultibandEq.A_Frequency, (float)this.FrequencyCutoff);
-		this._dsp.SetParameterFloat((int)DspMultibandEq.A_Q, 1f);
+		this._dsp.setParameterInt((int)DSP_MULTIBAND_EQ.A_FILTER, (int)DSP_MULTIBAND_EQ_FILTER_TYPE.HIGHPASS_24DB);
+		this._dsp.setParameterFloat((int)DSP_MULTIBAND_EQ.A_FREQUENCY, (float)this.FrequencyCutoff);
+		this._dsp.setParameterFloat((int)DSP_MULTIBAND_EQ.A_Q, 1f);
 
 		this._dspIndex = stream.DspIndex++;
-		stream.Channel.AddDSP(this._dspIndex, this._dsp);
+		stream.Channel.addDSP(this._dspIndex, this._dsp);
 	}
 	protected override void InternalRemove() {
 		if (!this.Applied)
@@ -45,6 +44,6 @@ public class FmodHighPassFilterAudioEffect : HighPassFilterAudioEffect {
 		
 		FmodAudioStream stream = this.AsFmodAudioStream();
 		
-		stream.Channel.RemoveDSP(this._dsp);
+		stream.Channel.removeDSP(this._dsp);
 	}
 }

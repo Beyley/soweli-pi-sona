@@ -1,16 +1,23 @@
-using FmodAudio;
+using ChaiFoxes.FMODAudio;
+using FMOD;
 using sowelipisona.Effects;
 using sowelipisona.Fmod.Effects;
 
 namespace sowelipisona.Fmod;
 
 public class FmodAudioEngine : AudioEngine {
-	private FmodSystem _system;
+	private Task? _task;
+	private bool  _run = true;
 
 	public override bool Initialize(IntPtr windowId = default) {
-		this._system = FmodAudio.Fmod.CreateSystem();
+		FMODManager.Init(FMODMode.Core, "");
 
-		this._system.Init(16);
+		this._task = Task.Factory.StartNew(async () => {
+			while (this._run) {
+				FMODManager.Update();
+				await Task.Delay(100);
+			}
+		});
 
 		this.Initialized = true;
 
@@ -18,24 +25,28 @@ public class FmodAudioEngine : AudioEngine {
 	}
 
 	public override bool SetAudioDevice(AudioDevice device) {
-		this._system.CurrentDriver = device.Id;
+		CoreSystem.Native.setDriver(device.Id);
 
 		return true;
 	}
 
 	public override AudioDevice[] GetAudioDevices() {
-		int count = this._system.DriverCount;
+		RESULT result = CoreSystem.Native.getNumDrivers(out int count);
+		if (result != RESULT.OK) {
+			throw new Exception($"Failed to get number of drivers! err {result}");
+		}
 
 		AudioDevice[] devices = new AudioDevice[count];
-		for (int i = 0; i < count; i++)
-			devices[i] = new FmodAudioDevice(i, this._system.GetDriverInfo(i));
+		for (int i = 0; i < count; i++) {
+			devices[i] = new FmodAudioDevice(i);
+		}
 
 		return devices;
 	}
 	protected override AudioStream EngineCreateStream(byte[] data) {
-		return new FmodAudioStream(this._system, data);
+		return new FmodAudioStream(data);
 	}
-	protected override SoundEffectPlayer EngineCreateSoundEffectPlayer(byte[] data) => new FmodSoundEffectPlayer(this._system, data);
+	protected override SoundEffectPlayer EngineCreateSoundEffectPlayer(byte[] data) => new FmodSoundEffectPlayer(data);
 	
 	public override LowPassFilterAudioEffect CreateLowPassFilterEffect(AudioStream stream) => new FmodLowPassFilterAudioEffect(stream);
 	public override HighPassFilterAudioEffect CreateHighPassFilterEffect(AudioStream stream) => new FmodHighPassFilterAudioEffect(stream);
