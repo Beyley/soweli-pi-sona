@@ -7,6 +7,10 @@ using sowelipisona.Native;
 namespace sowelipisona.ManagedBass;
 
 public class ManagedBassAudioEngine : AudioEngine {
+	public override double MasterVolume {
+		get => Bass.Volume;
+		set => Bass.Volume = value;
+	}
 	public override bool Initialize(IntPtr windowId = default) {
 		if (windowId == default) windowId = IntPtr.Zero;
 

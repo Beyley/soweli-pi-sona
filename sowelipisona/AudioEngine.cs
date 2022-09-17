@@ -11,9 +11,11 @@ public abstract class AudioEngine {
 	/// </summary>
 	public AudioDevice AudioDeviceInUse { get; protected set; }
 	/// <summary>
-	/// Whether the engine is in an initialized state
+	///     Whether the engine is in an initialized state
 	/// </summary>
-	public bool Initialized { get;             protected set; }
+	public bool Initialized { get; protected set; }
+	
+	public abstract double MasterVolume { get; set; }
 
 	/// <summary>
 	///     Initializes the audio engine to make it ready for audio playback
@@ -23,14 +25,15 @@ public abstract class AudioEngine {
 	public abstract bool Initialize(IntPtr windowId = default);
 
 	/// <summary>
-	/// The implementation of this is depending on the backend, but it will either set the default for new streams, or the global for all streams
+	///     The implementation of this is depending on the backend, but it will either set the default for new streams, or the
+	///     global for all streams
 	/// </summary>
 	/// <param name="device"></param>
 	/// <returns></returns>
 	public abstract bool SetAudioDevice(AudioDevice device);
 
 	/// <summary>
-	/// Disposes an AudioStream, freeing all resources
+	///     Disposes an AudioStream, freeing all resources
 	/// </summary>
 	/// <param name="stream">The AudioStream to dispose of</param>
 	public void DisposeStream(AudioStream stream) {
@@ -41,7 +44,7 @@ public abstract class AudioEngine {
 	}
 
 	/// <summary>
-	/// Disposes a SoundEffectPlayer, freeing all resources
+	///     Disposes a SoundEffectPlayer, freeing all resources
 	/// </summary>
 	/// <param name="player">The SoundEffectPlayer to dispose</param>
 	public void DisposeSoundEffectPlayer(SoundEffectPlayer player) {
@@ -94,7 +97,7 @@ public abstract class AudioEngine {
 	public SoundEffectPlayer CreateSoundEffectPlayer(string filename) {
 		return this.CreateSoundEffectPlayer(File.ReadAllBytes(filename));
 	}
-	
+
 	public SoundEffectPlayer CreateSoundEffectPlayer(byte[] data) {
 		SoundEffectPlayer player = this.EngineCreateSoundEffectPlayer(data);
 
@@ -102,10 +105,10 @@ public abstract class AudioEngine {
 
 		return player;
 	}
-	
+
 	protected abstract SoundEffectPlayer EngineCreateSoundEffectPlayer(byte[] data);
 
-	public abstract LowPassFilterAudioEffect CreateLowPassFilterEffect(AudioStream stream);
+	public abstract LowPassFilterAudioEffect  CreateLowPassFilterEffect(AudioStream  stream);
 	public abstract HighPassFilterAudioEffect CreateHighPassFilterEffect(AudioStream stream);
-	public abstract ReverbAudioEffect CreateReverbEffect(AudioStream stream);
+	public abstract ReverbAudioEffect         CreateReverbEffect(AudioStream         stream);
 }

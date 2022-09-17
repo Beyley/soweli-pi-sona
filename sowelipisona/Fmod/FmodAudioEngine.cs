@@ -9,6 +9,15 @@ public class FmodAudioEngine : AudioEngine {
 	private Task? _task;
 	private bool  _run = true;
 
+	public override double MasterVolume {
+		get {
+			//TODO:
+			return 1;
+		}
+		set {
+			//TODO
+		}
+	}
 	public override bool Initialize(IntPtr windowId = default) {
 		FMODManager.Init(FMODMode.Core, "");
 
