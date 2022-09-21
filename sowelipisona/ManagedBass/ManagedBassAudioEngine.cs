@@ -8,8 +8,8 @@ namespace sowelipisona.ManagedBass;
 
 public class ManagedBassAudioEngine : AudioEngine {
 	public override double MusicVolume {
-		get => Bass.GlobalMusicVolume;
-		set => Bass.GlobalMusicVolume = (int)(value / 10000d);
+		get => Bass.GlobalStreamVolume;
+		set => Bass.GlobalStreamVolume = (int)(value / 10000d);
 	}
 	public override double SampleVolume {
 		get => Bass.GlobalSampleVolume;
