@@ -9,7 +9,16 @@ public class FmodAudioEngine : AudioEngine {
 	private Task? _task;
 	private bool  _run = true;
 
-	public override double MasterVolume {
+	public override double MusicVolume {
+		get {
+			//TODO:
+			return 1;
+		}
+		set {
+			//TODO
+		}
+	}
+	public override double SampleVolume {
 		get {
 			//TODO:
 			return 1;

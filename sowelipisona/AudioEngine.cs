@@ -15,7 +15,8 @@ public abstract class AudioEngine {
 	/// </summary>
 	public bool Initialized { get; protected set; }
 	
-	public abstract double MasterVolume { get; set; }
+	public abstract double MusicVolume  { get; set; }
+	public abstract double SampleVolume { get; set; }
 
 	/// <summary>
 	///     Initializes the audio engine to make it ready for audio playback
