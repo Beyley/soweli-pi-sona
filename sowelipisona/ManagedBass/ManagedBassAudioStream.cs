@@ -4,11 +4,12 @@ using ManagedBass.Fx;
 
 namespace sowelipisona.ManagedBass;
 
-internal class ManagedBassAudioStream : AudioStream {
+internal sealed class ManagedBassAudioStream : AudioStream {
 	private readonly double _initialAudioFrequency;
 
 	private readonly GCHandle _memoryHandle;
 	private          double   _lastSpeed = 1d;
+	private readonly Stream?  _stream;
 
 	internal ManagedBassAudioStream(IReadOnlyCollection<byte> data) {
 		this._memoryHandle = GCHandle.Alloc(data, GCHandleType.Pinned);
@@ -19,6 +20,73 @@ internal class ManagedBassAudioStream : AudioStream {
 
 		this._initialAudioFrequency = Bass.ChannelGetAttribute(this.Handle, ChannelAttribute.Frequency);
 	}
+
+	public ManagedBassAudioStream(Stream stream) {
+		this._stream = stream;
+
+		int tempAudioHandle = Bass.CreateStream(StreamSystem.NoBuffer, BassFlags.Prescan | BassFlags.Decode, new FileProcedures {
+			Close  = this.FileProcClose,
+			Length = this.FileProcLength,
+			Read   = this.FileProcRead,
+			Seek   = this.FileProcSeek
+		});
+
+		this._initialAudioFrequency = Bass.ChannelGetAttribute(this.Handle, ChannelAttribute.Frequency);
+	}
+
+	private void FileProcClose(IntPtr user) {
+		//this does nothing...
+	}
+
+	private long FileProcLength(IntPtr user) {
+		if (this._stream is not { CanSeek: true })
+			return 0;
+
+		try {
+			return this._stream.Length;
+		}
+		catch {
+			return 0;
+		}
+	}
+
+	private bool FileProcSeek(long offset, IntPtr user) {
+		if (this._stream is not { CanSeek: true })
+			return false;
+
+		try {
+			return this._stream.Seek(offset, SeekOrigin.Begin) == offset;
+		}
+		catch {
+			return false;
+		}
+	}
+
+	private int FileProcRead(IntPtr buffer, int length, IntPtr user) {
+		if (this._stream is not { CanRead: true })
+			return 0;
+
+		try {
+			unsafe {
+				//Create a new staging array to store the read data in
+				byte[] arr = new byte[length];
+				//Read the data into the array
+				int read = this._stream.Read(arr, 0, length);
+
+				//Copy the array into the memory space, the Math.Min call is to ensure that we dont overcopy, only copying the lowest amount of bytes
+				fixed (byte* ptr = arr) {
+					Buffer.MemoryCopy(ptr, (void*)buffer, Math.Min(length, read), Math.Min(length, read));
+				}
+
+				//Return the bytes read
+				return read;
+			}
+		}
+		catch {
+			return 0;
+		}
+	}
+
 	public override int Handle {
 		get;
 		internal set;

@@ -60,6 +60,9 @@ public class FmodAudioEngine : AudioEngine {
 	protected override AudioStream EngineCreateStream(byte[] data) {
 		return new FmodAudioStream(data);
 	}
+	protected override AudioStream EngineCreateStream(Stream stream) {
+		return new FmodAudioStream(stream);
+	}
 	protected override SoundEffectPlayer EngineCreateSoundEffectPlayer(byte[] data) {
 		return new FmodSoundEffectPlayer(data);
 	}

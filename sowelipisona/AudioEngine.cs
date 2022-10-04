@@ -82,6 +82,14 @@ public abstract class AudioEngine {
 		return stream;
 	}
 
+	public AudioStream CreateStream(Stream stream) {
+		AudioStream audioStream = this.EngineCreateStream(stream);
+		
+		this.Streams.Add(audioStream);
+
+		return audioStream;
+	}
+
 	/// <summary>
 	///     Gets a list of all audio devices available
 	/// </summary>
@@ -94,6 +102,12 @@ public abstract class AudioEngine {
 	/// <param name="data">The data for the audio file</param>
 	/// <returns></returns>
 	protected abstract AudioStream EngineCreateStream(byte[] data);
+	/// <summary>
+	/// Creates an audio stream from a data stream
+	/// </summary>
+	/// <param name="stream">The data stream</param>
+	/// <returns></returns>
+	protected abstract AudioStream EngineCreateStream(Stream stream);
 
 	public SoundEffectPlayer CreateSoundEffectPlayer(string filename) {
 		return this.CreateSoundEffectPlayer(File.ReadAllBytes(filename));

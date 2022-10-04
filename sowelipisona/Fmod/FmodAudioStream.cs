@@ -41,6 +41,42 @@ internal class FmodAudioStream : AudioStream {
 		if (result != RESULT.OK)
 			throw new Exception($"Failed to get frequency! err:{result}");
 	}
+	public FmodAudioStream(Stream stream) {
+		byte[] data;
+		try {
+			data = new byte[stream.Length];
+
+			_ = stream.Read(data, 0, (int)stream.Length);
+		}
+		catch {
+			throw new Exception("You cannot use this type of stream! We must be able to seek and read!");
+		}
+		
+		CREATESOUNDEXINFO info = new CREATESOUNDEXINFO {
+			length = (uint)data.Length,
+			cbsize = Marshal.SizeOf<CREATESOUNDEXINFO>()
+		};
+
+		RESULT result = CoreSystem.Native.createSound(data, MODE.OPENMEMORY | MODE.DEFAULT, ref info, out this.Sound);
+		if (result != RESULT.OK)
+			throw new Exception($"Failed to create sound! err:{result}");
+
+		result = CoreSystem.Native.createDSPByType(DSP_TYPE.PITCHSHIFT, out this._pitchShift);
+		if (result != RESULT.OK)
+			throw new Exception($"Failed to create pitch DSP! err:{result}");
+
+		result = CoreSystem.Native.playSound(this.Sound, default(ChannelGroup), true, out this.Channel);
+		if (result != RESULT.OK)
+			throw new Exception($"Failed to create `sound`! err:{result}");
+
+		result = this.Channel.addDSP(0, this._pitchShift);
+		if (result != RESULT.OK)
+			throw new Exception($"Failed to add dsp! err:{result}");
+
+		result = this.Channel.getFrequency(out this._initialFrequency);
+		if (result != RESULT.OK)
+			throw new Exception($"Failed to get frequency! err:{result}");	
+	}
 	public override int Handle {
 		get;
 		internal set;

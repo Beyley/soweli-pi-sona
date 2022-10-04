@@ -64,6 +64,9 @@ public class ManagedBassAudioEngine : AudioEngine {
 	protected override AudioStream EngineCreateStream(byte[] data) {
 		return new ManagedBassAudioStream(data);
 	}
+	protected override AudioStream EngineCreateStream(Stream stream) {
+		return new ManagedBassAudioStream(stream);
+	}
 	protected override SoundEffectPlayer EngineCreateSoundEffectPlayer(byte[] data) {
 		return new ManagedBassSoundEffectPlayer(data);
 	}
