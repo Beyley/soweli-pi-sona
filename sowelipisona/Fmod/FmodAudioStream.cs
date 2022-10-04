@@ -3,40 +3,40 @@ using ChaiFoxes.FMODAudio;
 using FMOD;
 using ManagedBass;
 using Channel = FMOD.Channel;
+using ChannelGroup = FMOD.ChannelGroup;
 using Sound = FMOD.Sound;
 
 namespace sowelipisona.Fmod;
 
-public class FmodAudioStream : AudioStream {
-	internal Sound   Sound;
+internal class FmodAudioStream : AudioStream {
+	private readonly float _initialFrequency;
+
+	private  DSP     _pitchShift;
 	internal Channel Channel;
 
-	private float _initialFrequency;
-
-	private DSP _pitchShift;
-
-	public int DspIndex;
+	public   int   DspIndex;
+	internal Sound Sound;
 
 	public FmodAudioStream(byte[] data) {
 		CREATESOUNDEXINFO info = new CREATESOUNDEXINFO();
-		info.length   = (uint)data.Length;
+		info.length = (uint)data.Length;
 		info.cbsize = Marshal.SizeOf(info);
 		RESULT result = CoreSystem.Native.createSound(data, MODE.OPENMEMORY | MODE.DEFAULT, ref info, out this.Sound);
 		if (result != RESULT.OK)
 			throw new Exception($"Failed to create sound! err:{result}");
-		
+
 		result = CoreSystem.Native.createDSPByType(DSP_TYPE.PITCHSHIFT, out this._pitchShift);
 		if (result != RESULT.OK)
 			throw new Exception($"Failed to create pitch DSP! err:{result}");
 
-		result       = CoreSystem.Native.playSound(this.Sound, default, true, out this.Channel);
+		result = CoreSystem.Native.playSound(this.Sound, default(ChannelGroup), true, out this.Channel);
 		if (result != RESULT.OK)
 			throw new Exception($"Failed to create `sound`! err:{result}");
 
 		result = this.Channel.addDSP(0, this._pitchShift);
 		if (result != RESULT.OK)
 			throw new Exception($"Failed to add dsp! err:{result}");
-		
+
 		result = this.Channel.getFrequency(out this._initialFrequency);
 		if (result != RESULT.OK)
 			throw new Exception($"Failed to get frequency! err:{result}");
@@ -51,7 +51,7 @@ public class FmodAudioStream : AudioStream {
 			RESULT result = this.Channel.getPosition(out uint position, TIMEUNIT.MS);
 			if (result != RESULT.OK)
 				throw new Exception($"Failed to get current position! err:{result}");
-			
+
 			return position;
 		}
 		set {
@@ -66,11 +66,45 @@ public class FmodAudioStream : AudioStream {
 			RESULT result = this.Sound.getLength(out uint length, TIMEUNIT.MS);
 			if (result != RESULT.OK)
 				throw new Exception($"Failed to get length! err:{result}");
-			
+
 			return length;
 		}
 	}
-	
+	public override double Volume {
+		get {
+			this.Channel.getVolume(out float volume);
+			return volume;
+		}
+		set => this.Channel.setVolume((float)value);
+	}
+
+	//TODO: fix this, the flags seem to not be getting set (100% this should be working, ill have to read up more on the Fmod docs)
+	public override bool Loop {
+		get {
+			this.Channel.getMode(out MODE mode);
+			return (mode & MODE.LOOP_NORMAL) != 0;
+		}
+		set {
+			this.Channel.getMode(out MODE mode);
+			if (value) {
+				mode &= ~MODE.LOOP_OFF;
+				mode |= MODE.LOOP_NORMAL;
+			}
+			else {
+				mode |= MODE.LOOP_OFF;
+				mode &= ~MODE.LOOP_NORMAL;
+			}
+			this.Channel.setMode(mode);
+		}
+	}
+
+	public override PlaybackState PlaybackState {
+		get {
+			this.Channel.getPaused(out bool paused);
+			return paused ? PlaybackState.Paused : PlaybackState.Playing;
+		}
+	}
+
 	public override bool SetAudioDevice(AudioDevice device) {
 		throw new NotImplementedException();
 	}
@@ -107,44 +141,8 @@ public class FmodAudioStream : AudioStream {
 	}
 	public override double GetSpeed() {
 		this.Channel.getFrequency(out float frequency);
-		
+
 		return frequency / this._initialFrequency;
-	}
-	public override double Volume {
-		get {
-			this.Channel.getVolume(out float volume);
-			return volume;
-		}
-		set {
-			this.Channel.setVolume((float)value);
-		}
-	}
-
-	//TODO: fix this, the flags seem to not be getting set (100% this should be working, ill have to read up more on the Fmod docs)
-	public override bool Loop {
-		get {
-			this.Channel.getMode(out MODE mode);
-			return (mode & MODE.LOOP_NORMAL) != 0;
-		}
-		set {
-			this.Channel.getMode(out MODE mode);
-			if (value) {
-				mode &= ~MODE.LOOP_OFF;
-				mode |= MODE.LOOP_NORMAL;
-			}
-			else {
-				mode |= MODE.LOOP_OFF;
-				mode &= ~MODE.LOOP_NORMAL;
-			}
-			this.Channel.setMode(mode);
-		}
-	}
-
-	public override PlaybackState PlaybackState {
-		get {
-			this.Channel.getPaused(out bool paused);
-			return paused ? PlaybackState.Paused : PlaybackState.Playing;
-		}
 	}
 
 	internal override bool Dispose() {

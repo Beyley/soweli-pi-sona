@@ -1,29 +1,28 @@
 namespace sowelipisona.Effects;
 
 public abstract class HighPassFilterAudioEffect : AudioEffect {
-    public abstract double FrequencyCutoff {
-        get;
-        set;
-    }
-    
-    protected double _frequencyCutoff = 1000;
+	protected double _frequencyCutoff = 1000;
 
-    protected HighPassFilterAudioEffect(AudioStream stream) {
-        this.Stream = stream;
-    }
-    
-    public override void Apply() {
-        this.InternalApply();
+	protected HighPassFilterAudioEffect(AudioStream stream) {
+		this.Stream = stream;
+	}
+	public abstract double FrequencyCutoff {
+		get;
+		set;
+	}
 
-        this.Applied = true;
-    }
-    
-    public override void Remove() {
-        this.InternalRemove();
+	public override void Apply() {
+		this.InternalApply();
 
-        this.Applied = false;
-    }
+		this.Applied = true;
+	}
 
-    protected abstract void InternalApply();
-    protected abstract void InternalRemove();
-}   
+	public override void Remove() {
+		this.InternalRemove();
+
+		this.Applied = false;
+	}
+
+	protected abstract void InternalApply();
+	protected abstract void InternalRemove();
+}

@@ -2,26 +2,28 @@ using ChaiFoxes.FMODAudio;
 using FMOD;
 using sowelipisona.Effects;
 
-namespace sowelipisona.Fmod.Effects; 
+namespace sowelipisona.Fmod.Effects;
 
-public class FmodHighPassFilterAudioEffect : HighPassFilterAudioEffect {
+internal class FmodHighPassFilterAudioEffect : HighPassFilterAudioEffect {
 	private DSP _dsp;
 	private int _dspIndex;
 	public FmodHighPassFilterAudioEffect(AudioStream stream) : base(stream) {}
-	
+
 	public override double FrequencyCutoff {
 		get => this._frequencyCutoff;
 		set {
 			if (!this.Applied)
 				throw new Exception("You must apply the effect before changing its parameters.");
-			
+
 			this._frequencyCutoff = value;
-			
+
 			this._dsp.setParameterFloat((int)DSP_MULTIBAND_EQ.A_FREQUENCY, (float)this.FrequencyCutoff);
 		}
 	}
 
-	private FmodAudioStream AsFmodAudioStream() => (FmodAudioStream)this.Stream;
+	private FmodAudioStream AsFmodAudioStream() {
+		return (FmodAudioStream)this.Stream;
+	}
 
 	protected override void InternalApply() {
 		if (this.Applied)
@@ -30,7 +32,7 @@ public class FmodHighPassFilterAudioEffect : HighPassFilterAudioEffect {
 		FmodAudioStream stream = this.AsFmodAudioStream();
 
 		CoreSystem.Native.createDSPByType(DSP_TYPE.MULTIBAND_EQ, out this._dsp);
-		
+
 		this._dsp.setParameterInt((int)DSP_MULTIBAND_EQ.A_FILTER, (int)DSP_MULTIBAND_EQ_FILTER_TYPE.HIGHPASS_24DB);
 		this._dsp.setParameterFloat((int)DSP_MULTIBAND_EQ.A_FREQUENCY, (float)this.FrequencyCutoff);
 		this._dsp.setParameterFloat((int)DSP_MULTIBAND_EQ.A_Q, 1f);
@@ -41,9 +43,9 @@ public class FmodHighPassFilterAudioEffect : HighPassFilterAudioEffect {
 	protected override void InternalRemove() {
 		if (!this.Applied)
 			throw new Exception("You must apply the effect first!");
-		
+
 		FmodAudioStream stream = this.AsFmodAudioStream();
-		
+
 		stream.Channel.removeDSP(this._dsp);
 	}
 }

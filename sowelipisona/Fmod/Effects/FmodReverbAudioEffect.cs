@@ -2,21 +2,19 @@ using ChaiFoxes.FMODAudio;
 using FMOD;
 using sowelipisona.Effects;
 
-namespace sowelipisona.Fmod.Effects; 
+namespace sowelipisona.Fmod.Effects;
 
-public class FmodReverbAudioEffect : ReverbAudioEffect {
+internal class FmodReverbAudioEffect : ReverbAudioEffect {
 	private DSP _dsp;
 	private int _dspIndex;
 	public FmodReverbAudioEffect(AudioStream stream) : base(stream) {}
-
-	private FmodAudioStream AsFmodAudioStream() => (FmodAudioStream)this.Stream;
 
 	public override double ReverbDropoff {
 		get => this._reverbDropoff;
 		set {
 			if (!this.Applied)
 				throw new Exception("You must apply the effect before changing its parameters.");
-			
+
 			this.CheckDropoff(value);
 
 			this._reverbDropoff = value;
@@ -35,7 +33,11 @@ public class FmodReverbAudioEffect : ReverbAudioEffect {
 			this._dsp.setParameterFloat((int)DSP_SFXREVERB.EARLYDELAY, (float)this.ReverbTime);
 		}
 	}
-	
+
+	private FmodAudioStream AsFmodAudioStream() {
+		return (FmodAudioStream)this.Stream;
+	}
+
 	protected override void InternalApply() {
 		if (this.Applied)
 			throw new Exception("You cannot apply an effect twice!");
@@ -43,7 +45,7 @@ public class FmodReverbAudioEffect : ReverbAudioEffect {
 		FmodAudioStream stream = this.AsFmodAudioStream();
 
 		CoreSystem.Native.createDSPByType(DSP_TYPE.SFXREVERB, out this._dsp);
-		
+
 		this._dsp.setParameterFloat((int)DSP_SFXREVERB.EARLYDELAY, (float)this.ReverbTime);
 		this._dsp.setParameterFloat((int)DSP_SFXREVERB.WETLEVEL, (float)this.ReverbDropoff);
 
@@ -53,9 +55,9 @@ public class FmodReverbAudioEffect : ReverbAudioEffect {
 	protected override void InternalRemove() {
 		if (!this.Applied)
 			throw new Exception("You must apply the effect first!");
-		
+
 		FmodAudioStream stream = this.AsFmodAudioStream();
-		
+
 		stream.Channel.removeDSP(this._dsp);
 	}
 }

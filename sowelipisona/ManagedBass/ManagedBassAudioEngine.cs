@@ -15,8 +15,8 @@ public class ManagedBassAudioEngine : AudioEngine {
 		get => Bass.GlobalSampleVolume;
 		set => Bass.GlobalSampleVolume = (int)(value * 10000d);
 	}
-	public override bool Initialize(IntPtr windowId = default) {
-		if (windowId == default) windowId = IntPtr.Zero;
+	public override bool Initialize(IntPtr windowId = default(IntPtr)) {
+		if (windowId == default(IntPtr)) windowId = IntPtr.Zero;
 
 		if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux)) {
 			Linux.Load("libbass.so", Linux.LoadFlags.RTLD_LAZY    | Linux.LoadFlags.RTLD_GLOBAL);
@@ -61,9 +61,19 @@ public class ManagedBassAudioEngine : AudioEngine {
 
 		return devices;
 	}
-	protected override AudioStream EngineCreateStream(byte[] data) => new ManagedBassAudioStream(data);
-	protected override SoundEffectPlayer EngineCreateSoundEffectPlayer(byte[] data) => new ManagedBassSoundEffectPlayer(data);
-	public override LowPassFilterAudioEffect CreateLowPassFilterEffect(AudioStream stream) => new ManagedBassLowPassFilterAudioEffect(stream);
-	public override HighPassFilterAudioEffect CreateHighPassFilterEffect(AudioStream stream) => new ManagedBassHighPassFilterAudioEffect(stream);
-	public override ReverbAudioEffect CreateReverbEffect(AudioStream stream) => new ManagedBassReverbAudioEffect(stream);
+	protected override AudioStream EngineCreateStream(byte[] data) {
+		return new ManagedBassAudioStream(data);
+	}
+	protected override SoundEffectPlayer EngineCreateSoundEffectPlayer(byte[] data) {
+		return new ManagedBassSoundEffectPlayer(data);
+	}
+	public override LowPassFilterAudioEffect CreateLowPassFilterEffect(AudioStream stream) {
+		return new ManagedBassLowPassFilterAudioEffect(stream);
+	}
+	public override HighPassFilterAudioEffect CreateHighPassFilterEffect(AudioStream stream) {
+		return new ManagedBassHighPassFilterAudioEffect(stream);
+	}
+	public override ReverbAudioEffect CreateReverbEffect(AudioStream stream) {
+		return new ManagedBassReverbAudioEffect(stream);
+	}
 }

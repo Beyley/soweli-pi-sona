@@ -4,10 +4,11 @@ using ManagedBass.Fx;
 
 namespace sowelipisona.ManagedBass;
 
-public class ManagedBassAudioStream : AudioStream {
+internal class ManagedBassAudioStream : AudioStream {
 	private readonly double _initialAudioFrequency;
 
 	private readonly GCHandle _memoryHandle;
+	private          double   _lastSpeed = 1d;
 
 	internal ManagedBassAudioStream(IReadOnlyCollection<byte> data) {
 		this._memoryHandle = GCHandle.Alloc(data, GCHandleType.Pinned);
@@ -28,6 +29,20 @@ public class ManagedBassAudioStream : AudioStream {
 		set => Bass.ChannelSetPosition(this.Handle, Bass.ChannelSeconds2Bytes(this.Handle, value / 1000d));
 	}
 
+	public override double Volume {
+		get => Bass.ChannelGetAttribute(this.Handle, ChannelAttribute.Volume);
+		set => Bass.ChannelSetAttribute(this.Handle, ChannelAttribute.Volume, value);
+	}
+
+	public override bool Loop {
+		get => (Bass.ChannelFlags(this.Handle, 0, 0) & BassFlags.Loop) > 0;
+		set => this.SetFlag(value, BassFlags.Loop);
+	}
+
+	public override double Length => Bass.ChannelBytes2Seconds(this.Handle, Bass.ChannelGetLength(this.Handle)) * 1000d;
+
+	public override PlaybackState PlaybackState => Bass.ChannelIsActive(this.Handle);
+
 	public override bool SetAudioDevice(AudioDevice device) {
 		return Bass.ChannelSetDevice(this.Handle, device.Id);
 	}
@@ -44,7 +59,6 @@ public class ManagedBassAudioStream : AudioStream {
 	public override bool Stop() {
 		return Bass.ChannelStop(this.Handle);
 	}
-	private double _lastSpeed = 1d;
 	public override bool SetSpeed(double speed, bool pitch = false) {
 		if (pitch) {
 			bool successFrequency = Bass.ChannelSetAttribute(this.Handle, ChannelAttribute.Frequency, this._initialAudioFrequency * speed);
@@ -52,7 +66,7 @@ public class ManagedBassAudioStream : AudioStream {
 
 			if (!successFrequency || !successTempo)
 				return false;
-			
+
 			this._lastSpeed = speed;
 			return true;
 		}
@@ -62,28 +76,18 @@ public class ManagedBassAudioStream : AudioStream {
 
 			if (!successFrequency || !successTempo)
 				return false;
-			
+
 			this._lastSpeed = speed;
 			return true;
 		}
 	}
-	public override double GetSpeed() => this._lastSpeed;
-	
-	public override double Volume {
-		get => Bass.ChannelGetAttribute(this.Handle, ChannelAttribute.Volume);
-		set => Bass.ChannelSetAttribute(this.Handle, ChannelAttribute.Volume, value);
-	}
-	
-	public override bool Loop {
-		get => (Bass.ChannelFlags(this.Handle, 0, 0) & BassFlags.Loop) > 0;
-		set => this.SetFlag(value, BassFlags.Loop);
+	public override double GetSpeed() {
+		return this._lastSpeed;
 	}
 
-	public override double Length => Bass.ChannelBytes2Seconds(this.Handle, Bass.ChannelGetLength(this.Handle)) * 1000d;
-
-	public override PlaybackState PlaybackState => Bass.ChannelIsActive(this.Handle);
-
-	private void SetFlag(bool value, BassFlags flag) => Bass.ChannelFlags(this.Handle, value ? flag : BassFlags.Default, flag);
+	private void SetFlag(bool value, BassFlags flag) {
+		Bass.ChannelFlags(this.Handle, value ? flag : BassFlags.Default, flag);
+	}
 
 	internal override bool Dispose() {
 		return Bass.StreamFree(this.Handle);

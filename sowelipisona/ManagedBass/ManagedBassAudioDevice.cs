@@ -2,7 +2,7 @@ using ManagedBass;
 
 namespace sowelipisona.ManagedBass;
 
-public class ManagedBassAudioDevice : AudioDevice {
+internal class ManagedBassAudioDevice : AudioDevice {
 	private DeviceInfo _info;
 
 	internal ManagedBassAudioDevice(int id, DeviceInfo info) {

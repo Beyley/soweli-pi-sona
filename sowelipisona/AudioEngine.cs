@@ -3,8 +3,8 @@
 namespace sowelipisona;
 
 public abstract class AudioEngine {
-	public readonly List<AudioStream>       Streams            = new();
-	public readonly List<SoundEffectPlayer> SoundEffectPlayers = new();
+	public readonly List<SoundEffectPlayer> SoundEffectPlayers = new List<SoundEffectPlayer>();
+	public readonly List<AudioStream>       Streams            = new List<AudioStream>();
 
 	/// <summary>
 	///     The current audio device, this should be set to the default by the overriding initialize
@@ -14,7 +14,7 @@ public abstract class AudioEngine {
 	///     Whether the engine is in an initialized state
 	/// </summary>
 	public bool Initialized { get; protected set; }
-	
+
 	public abstract double MusicVolume  { get; set; }
 	public abstract double SampleVolume { get; set; }
 
@@ -23,7 +23,7 @@ public abstract class AudioEngine {
 	/// </summary>
 	/// <param name="windowId">The ID of the window, not providing one will produce different behavior depending on the backend</param>
 	/// <returns>Whether initializing the audio engine was successful</returns>
-	public abstract bool Initialize(IntPtr windowId = default);
+	public abstract bool Initialize(IntPtr windowId = default(IntPtr));
 
 	/// <summary>
 	///     The implementation of this is depending on the backend, but it will either set the default for new streams, or the

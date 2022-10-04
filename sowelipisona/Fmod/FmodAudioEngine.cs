@@ -6,28 +6,26 @@ using sowelipisona.Fmod.Effects;
 namespace sowelipisona.Fmod;
 
 public class FmodAudioEngine : AudioEngine {
-	private Task? _task;
-	private bool  _run = true;
+	private readonly bool  _run = true;
+	private          Task? _task;
 
 	public override double MusicVolume {
-		get {
+		get =>
 			//TODO:
-			return 1;
-		}
+			1;
 		set {
 			//TODO
 		}
 	}
 	public override double SampleVolume {
-		get {
+		get =>
 			//TODO:
-			return 1;
-		}
+			1;
 		set {
 			//TODO
 		}
 	}
-	public override bool Initialize(IntPtr windowId = default) {
+	public override bool Initialize(IntPtr windowId = default(IntPtr)) {
 		FMODManager.Init(FMODMode.Core, "");
 
 		this._task = Task.Factory.StartNew(async () => {
@@ -50,23 +48,29 @@ public class FmodAudioEngine : AudioEngine {
 
 	public override AudioDevice[] GetAudioDevices() {
 		RESULT result = CoreSystem.Native.getNumDrivers(out int count);
-		if (result != RESULT.OK) {
+		if (result != RESULT.OK)
 			throw new Exception($"Failed to get number of drivers! err {result}");
-		}
 
 		AudioDevice[] devices = new AudioDevice[count];
-		for (int i = 0; i < count; i++) {
+		for (int i = 0; i < count; i++)
 			devices[i] = new FmodAudioDevice(i);
-		}
 
 		return devices;
 	}
 	protected override AudioStream EngineCreateStream(byte[] data) {
 		return new FmodAudioStream(data);
 	}
-	protected override SoundEffectPlayer EngineCreateSoundEffectPlayer(byte[] data) => new FmodSoundEffectPlayer(data);
-	
-	public override LowPassFilterAudioEffect CreateLowPassFilterEffect(AudioStream stream) => new FmodLowPassFilterAudioEffect(stream);
-	public override HighPassFilterAudioEffect CreateHighPassFilterEffect(AudioStream stream) => new FmodHighPassFilterAudioEffect(stream);
-	public override ReverbAudioEffect CreateReverbEffect(AudioStream stream) => new FmodReverbAudioEffect(stream);
+	protected override SoundEffectPlayer EngineCreateSoundEffectPlayer(byte[] data) {
+		return new FmodSoundEffectPlayer(data);
+	}
+
+	public override LowPassFilterAudioEffect CreateLowPassFilterEffect(AudioStream stream) {
+		return new FmodLowPassFilterAudioEffect(stream);
+	}
+	public override HighPassFilterAudioEffect CreateHighPassFilterEffect(AudioStream stream) {
+		return new FmodHighPassFilterAudioEffect(stream);
+	}
+	public override ReverbAudioEffect CreateReverbEffect(AudioStream stream) {
+		return new FmodReverbAudioEffect(stream);
+	}
 }

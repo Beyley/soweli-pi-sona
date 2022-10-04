@@ -7,8 +7,7 @@ public class Linux {
 	/// <summary>
 	///     A list of flags available to load a library with
 	/// </summary>
-	[Flags]
-	[SuppressMessage("ReSharper", "InconsistentNaming")]
+	[Flags, SuppressMessage("ReSharper", "InconsistentNaming")]
 	public enum LoadFlags {
 		RTLD_LAZY         = 0x00001,
 		RTLD_NOW          = 0x00002,

@@ -185,7 +185,7 @@ void TestEngine(AudioEngine engine) {
 		catch (NotImplementedException) {
 			Console.WriteLine("Creating reverb effect  failed!");
 		}
-		
+
 		Console.WriteLine($"Press enter to turn reverb dropoff to -10! | curpos: {stream.CurrentPosition}/{stream.Length}");
 		Console.ReadLine();
 		try {
@@ -194,7 +194,7 @@ void TestEngine(AudioEngine engine) {
 		catch (NotImplementedException) {
 			Console.WriteLine("Changing reverb intensity to -10 failed!");
 		}
-		
+
 		Console.WriteLine($"Press enter to turn reverb dropoff to 0! | curpos: {stream.CurrentPosition}/{stream.Length}");
 		Console.ReadLine();
 		try {
@@ -203,7 +203,7 @@ void TestEngine(AudioEngine engine) {
 		catch (NotImplementedException) {
 			Console.WriteLine("Changing reverb intensity to 0 failed!");
 		}
-		
+
 		Console.WriteLine($"Press enter to turn reverb time to 300 miliseconds! | curpos: {stream.CurrentPosition}/{stream.Length}");
 		Console.ReadLine();
 		try {
@@ -212,7 +212,7 @@ void TestEngine(AudioEngine engine) {
 		catch (NotImplementedException) {
 			Console.WriteLine("Changing reverb time to 300 failed!");
 		}
-		
+
 		Console.WriteLine($"Press enter to turn reverb time to 0.1 seconds! | curpos: {stream.CurrentPosition}/{stream.Length}");
 		Console.ReadLine();
 		try {
@@ -221,7 +221,7 @@ void TestEngine(AudioEngine engine) {
 		catch (NotImplementedException) {
 			Console.WriteLine("Changing reverb time to 100 failed!");
 		}
-		
+
 		Console.WriteLine($"Press enter to turn reverb effect off! | curpos: {stream.CurrentPosition}/{stream.Length}");
 		Console.ReadLine();
 		try {
