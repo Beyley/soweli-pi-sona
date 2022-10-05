@@ -32,6 +32,38 @@ void TestEngine(AudioEngine engine) {
 		Console.WriteLine("AudioEngine.GetAudioDevices() not implemented!");
 	}
 
+	FileStream str = File.OpenRead("test.mp3");
+	try {
+		Console.WriteLine("Getting waveform data");
+		Waveform waveform = engine.GetWaveform(str);
+
+		if (waveform.Points == null)
+			throw new Exception();
+
+		double leftAvg  = 0;
+		double rightAvg = 0;
+		
+		foreach (Waveform.Point point in waveform.Points) {
+			leftAvg  += point.AmplitudeLeft;
+			rightAvg += point.AmplitudeRight;
+		}
+
+		leftAvg /= waveform.Points.Length;
+		rightAvg /= waveform.Points.Length;
+		
+		Console.WriteLine($"Point amount: {waveform.Points.Length}, Average left amplitude: {leftAvg}, Average right amplitude: {rightAvg}");
+		;
+	}
+	catch (NotImplementedException) {
+		Console.WriteLine("AudioEngine.GetWaveform(stream) not implemented!");
+	}
+	catch (Exception) {
+		Console.WriteLine("Other error occurred while getting waveform data...");
+	}
+	finally {
+		str.Close();
+	}
+
 	AudioStream stream = null;
 	try {
 		Console.WriteLine("Creating Stream");
