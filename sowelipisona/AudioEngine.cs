@@ -90,6 +90,8 @@ public abstract class AudioEngine {
 		return audioStream;
 	}
 
+	public abstract Waveform GetWaveform(Stream stream); 
+
 	/// <summary>
 	///     Gets a list of all audio devices available
 	/// </summary>

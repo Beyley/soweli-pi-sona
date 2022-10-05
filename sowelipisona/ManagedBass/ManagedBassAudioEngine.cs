@@ -52,6 +52,12 @@ public class ManagedBassAudioEngine : AudioEngine {
 		return true;
 	}
 
+	public override Waveform GetWaveform(Stream stream) {
+		ManagedBassWaveform managedBassWaveform = new ManagedBassWaveform(stream);
+
+		return managedBassWaveform.GetWaveform();
+	}
+	
 	public override AudioDevice[] GetAudioDevices() {
 		int count = Bass.DeviceCount;
 

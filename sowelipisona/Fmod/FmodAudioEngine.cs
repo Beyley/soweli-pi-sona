@@ -46,6 +46,10 @@ public class FmodAudioEngine : AudioEngine {
 		return true;
 	}
 
+	public override Waveform GetWaveform(Stream stream) {
+		throw new NotImplementedException();
+	}
+	
 	public override AudioDevice[] GetAudioDevices() {
 		RESULT result = CoreSystem.Native.getNumDrivers(out int count);
 		if (result != RESULT.OK)
