@@ -29,6 +29,9 @@ public class ManagedBassAudioEngine : AudioEngine {
 			DeviceInitFlags.Latency,
 			windowId
 		);
+		
+		//Set the amount of update threads to use for Bass
+		Bass.UpdateThreads = Math.Max(Environment.ProcessorCount / 2, 2);
 
 		this.Initialized = success;
 

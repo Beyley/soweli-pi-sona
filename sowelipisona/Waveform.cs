@@ -9,6 +9,13 @@ public class Waveform {
 		internal set;
 	}
 
+	public delegate int GetSamplePositionFromTimePosition(double time);
+
+	public GetSamplePositionFromTimePosition GetPointFromTime {
+		get;
+		internal set;
+	}
+	
 	public struct Point {
 		/// <summary>
 		///     The amplitude of the left channel.

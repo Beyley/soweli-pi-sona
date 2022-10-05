@@ -74,8 +74,9 @@ internal class ManagedBassWaveform {
 		try {
 			Bass.ChannelGetInfo(decodeStream, out ChannelInfo info);
 
-			long length = Bass.ChannelGetLength(decodeStream);
-
+			long length     = Bass.ChannelGetLength(decodeStream);
+			double miliLength = Bass.ChannelBytes2Seconds(decodeStream, length) * 1000;
+			
 			int samplesPerPoint = (int)(info.Frequency * RESOLUTION * info.Channels);
 
 			int bytesPerPoint = samplesPerPoint * BYTES_PER_SAMPLE;
@@ -90,6 +91,16 @@ internal class ManagedBassWaveform {
 			sampleBuffer = new float[bytesPerIteration / BYTES_PER_SAMPLE];
 
 			int pointIndex = 0;
+
+			waveform.GetPointFromTime = time => {
+				//Get the progress from 0-1 of the time
+				double progress = time / miliLength;
+
+				//Clamp to 0-1
+				progress = Math.Max(Math.Min(progress, 1), 0);
+				
+				return (int)Math.Floor(pointCount * progress);
+			};
 
 			// Read sample data
 			while (length > 0) {
